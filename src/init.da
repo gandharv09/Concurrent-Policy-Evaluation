@@ -1,0 +1,63 @@
+import os,sys,traceback,json,da
+
+try:
+    database=import_da("database")
+    coordinator=import_da("coordinator")
+    client=import_da("client")
+except ImportError:
+    output("Failed to import class files")
+
+class Init(process):
+    def setup():
+        pass
+    def initProcesses(numCoordinator, numWorkerPerCoordinator):
+        try:
+            coordinators=new(coordinator.Coordinator,num = numCoordinator )
+
+            clients=new(client.Client)
+            db =new(database.Database)
+
+            if len(sys.argv) < 3:
+                # improper arguments
+                output("Improper Arguments")
+                return -1
+
+            dbLoad = sys.argv[1]
+            args = []
+            args.append(dbLoad)
+            setup(db,args)
+            output("DbEmulator process set up")
+            setup(coordinators, (numWorkerPerCoordinator, list(coordinators), db))
+            output("Coordinators have been setup")
+            setup(clients, (list(coordinators), sys.argv[2]))
+            output("Client process has been set up")
+
+            # now we need to start all the processes in the system
+            start(clients)
+            start(coordinators)
+            start(db)
+            output("Started all processes")
+            return 0
+        except :
+            output("STACK TRACE")
+            output(traceback.print_exc())
+            return -1
+
+    def run():
+        numCoordinator=1
+        numWorkerPerCoordinator=2
+        if initProcesses(numCoordinator,numWorkerPerCoordinator):
+            output("Failed to setup the environment")
+            sys.exit(-1)
+
+def main():
+    init = new(Init)
+    setup(init,())
+    #output(da.__version__)
+    start(init)
+    try:
+        while True:
+            pass
+    except KeyboardInterrupt:
+        output("SYSTEM EXITING")
+        sys.exit(-1)

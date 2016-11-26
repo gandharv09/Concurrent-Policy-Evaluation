@@ -1,0 +1,17 @@
+{
+  "Case" :"Simple read write request without any conflicting attributes",
+  "scenario":[
+    {
+      "subject":"employeeA",
+      "resource":"bankA",
+      "action":"view",
+      "position":"employee"
+    },
+    {
+      "subject":"employeeB",
+      "resource":"bankB",
+      "action":"read",
+      "position":"employee"
+    }
+  ]
+}

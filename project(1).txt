@@ -1,0 +1,427 @@
+		          CSE535: Asynchronous Systems               2016-11-17
+		       Scott Stoller, Stony Brook University
+
+   Project: Distributed History-Based Access Control Policy Evaluation
+
+======================================================================
+OVERVIEW
+
+This project involves implementing the algorithm described in:
+
+  [Decat+ 2015] Maarten Decat, Bert Lagaisse, Wouter Joosen.  Scalable and 
+  Secure Concurrent Evaluation of History-based Access Control Policies.
+  Proceedings of the 31st Annual Computer Security Applications Conference
+  (ACSAC 2015).  ACM, 2015.
+
+The project also involves design and implementation of an improved version of the algorithm.
+
+======================================================================
+QUESTIONS
+
+I will present other papers in class, but you and your teammate will be reading this paper mostly on your own.  Of course, if you and your teammate are uncertain about any aspects, you are welcome to ask.  Please do not send your questions to the authors.  I already sent them several questions, they graciously answered them, and it would be unfair to bother them again with what are likely to be many of the same questions.  Please ask your questions in the Project forum on Blackboard, during office hours, or at the beginning of class (if you think the question is of general interest).  Please answer questions posted on Blackboard if you can; it will help your classmates, by providing faster responses, and will show me that you understand the paper.  Please ask questions by email only if they require confidentiality.
+
+======================================================================
+PHASE 0: TEAM FORMATION
+
+find exactly one teammate.  exactly one member of each team should send a message to stoller@cs.stonybrook.edu containing the names and email addresses of both team members.  if you cannot find a teammate, don't panic!  just send me a message stating this, and I will find a teammate for you.  every team will have exactly two members.  the only exception to this policy will be: if the number of students in the class is odd, I will choose one person with no teammate and either add them to a team or ask them to work alone.
+
+======================================================================
+PHASE 1: PSEUDO-CODE FOR ORIGINAL ALGORITHM
+
+write complete pseudo-code for the distributed coordinator algorithm described in [Decat+ 2015].  [2016-09-16: you do not need to write pseudocode for the centralized coordinator algorithm.]  keep the pseudo-code (e.g., data structures) at a high level of abstraction.  the pseudo-code should include a reasonable amount of explanatory comments. [2016-09-19: deleted comment about making threads and synchronization explicit.]
+
+[2016-09-19: "high-level" here means "omit implementation details".  it does not mean "omit algorithm details"!  For example, the pseudo-code should clearly indicate the algorithm used for conflict detection at the subject coordinator and resource coordinator."]  [2016-09-20: As another example, the pseudo-code should clearly specify exactly what information is contained in each message.  A general guideline for the expected level of detail and clarity of pseudo-code is: if two competent programmers independently implement the pseudo-code, they should produce functionally equivalent implementations, although the implementations may differ on other dimensions, such as time efficiency, space efficiency, modularity/extensibility, and security. ]
+
+[2016-09-19: Very brief pseudo-code for the worker is sufficient.  You mainly need to specify the interface to the worker, i.e., the type and meaning of messages it sends and receives.]
+
+examples of reasonably good pseudo-code:
+
+  pseudo-code for leader election algorithms in the excerpt from 
+  [Chow and Johnson 1997] posted on Blackboard (and copied into my 
+  lecture notes on leader election).
+
+  pseudo-code for snapshot algorithms in my lecture notes.
+
+  pseudo-code for Chord in [Stoica+ 2003], posted on Blackboard
+  (except that it uses RPC; your pseudocode should use explicit messages)
+
+examples of high-level data structures (appropriate in pseudo-code): tuples, sequences, sets, maps.  examples of low-level data structures (inappropriate in pseudo-code): doubly-linked lists, hashsets, association lists.
+
+this assignment is intended to help you understand the algorithm and convince us that you understand it.
+
+clarity and readability of the pseudocode are paramount and will be considered in grading.
+
+======================================================================
+PHASE 2: IMPLEMENTATION OF ORIGINAL ALGORITHM
+
+The implementation must be in DistAlgo, as stated on the course web page.
+
+------------------------------------------------------------
+POLICY LANGUAGE
+
+the system uses the simple XML-based policy language illustrated in policy-example.xml and explained below.
+
+each policy rule implicitly permits the specified action.  the policy language does not include deny rules.
+
+XML attributes in subjectCondition and resourceCondition tags are interpreted as conditions.  the right side must have the form "constant" (implicitly, this is an equality test), "<constant", or ">constant".  a condition of the form "<constant" or ">constant" is false if the attribute value is not a numeric string according to Python built-in isnumeric() function.  note that the character '<' must be escaped in the .xml file, i.e., represented as '&lt;'.  for example, the following subjectCondition holds if the subject is an employee with age > 17 and level < 3.
+
+<subjectCondition position="employee" age=">17" level="&lt;3"></subjectCondition>
+
+XML attributes in subjectUpdate and resourceUpdate tags are interpreted as assignments.  the right side can be a constant or a special value "++" or "--".  "++" and "--" mean: if the attribute value is a numeric string, then increment or decrement it, respectively, otherwise leave the value unchanged.  for example, the following resourceCondition sets the "viewed" attribute to the constant "true" and increments the "viewCount" attribute.
+
+<resourceUpdate viewed="true" viewCount="++"></resourceUpdate>
+
+sample code for reading a policy appears in policy.py.
+
+[2016-10-03: every subject and resource has a distinguished attribute "id" which contains a unique identifier.  I revised policy-example.xml accordingly, renaming the "name" attribute of banks A and B to "id". ]
+
+[2016-10-05: added the following extension to the policy language.]
+if the expression on the right side of a condition or update starts with $, then it must have the form $subject.ATTRIBUTE or $resource.ATTRIBUTE (here, subject and resource are terminal symbols, and ATTRIBUTE is a non-terminal symbol representing an attribute name), and it represents the value of the indicated attribute.  for example,
+
+  <rule name="access a bank for the first time">
+    <subjectCondition position="employee" history=""></subjectCondition>
+    <resourceCondition type="bank"></resourceCondition>
+    <action name="read"></action>
+    <subjectUpdate history="$resource.id"></subjectUpdate>
+  </rule>
+
+  <rule name="access the same bank again">
+    <subjectCondition position="employee" history="$resource.id"></subjectCondition>
+    <resourceCondition type="bank"></resourceCondition>
+    <action name="read"></action>
+  </rule>
+
+[2016-10-07: when evaluating an expression $subject.ATTRIBUTE or $resource.ATTRIBUTE, always use the attribute's value at the start of the transaction, i.e., do not take updates performed by this transaction into account.  in other words, if a transaction performs multiple updates, think of it as a parallel assignment statement, in which all of the right sides are evaluated before any of the updates are performed.]
+
+[2016-10-17] a rule applies to a request if the subject condition and resource condition are satisfied by the subject and resource, respectively, specified in the request.  the result of evaluating a request with respect to a policy is determined by the first applicable rule, if any, in the order the rules appear in the policy file.  if an applicable rule R is found, the decision is "permit", and the set of read attributes contains attributes used in R and attributes used in any rule that precedes R (because, if those attributes had different values, a rules preceding R might have applied to the request, changing the result).  if no rules are applicable, the decision is "deny", and the set of read attributes contains attributes used in any rule in the policy.  [I added this information to the phase 2 section of this document, but it actually applies starting in phase 3.  for phase 2, it's fine if the worker returns only the attributes used in the applicable rule.]
+
+------------------------------------------------------------
+DATABASE EMULATOR
+
+the system does not use an actual replicated DBMS.  instead, it uses a database emulator, which you create.  the database emulator runs as a separate process, like a DBMS would.  it is accessed by sending and receiving DistAlgo messages, not through a specialized database API.  it reads the initial content of the database from a file; you design the file format.
+
+all coordinators and workers interact with a single database emulator process.  this is a simplification of the system architecture in [Decat+ 2015], in which each server has a local replica of the DBMS.  the database emulator emulates the effects having a local replica of the database at each server, by delaying the visibility of updates to workers.  specifically, there are configuration parameters minDBlatency and maxDBlatency.  for each update, the emulator picks a latency l uniformly at random from the interval between the specified min and max, and makes the update visible to all workers after delay l.  it would be more realistic to use different latencies for workers on different servers, but this is not required.
+
+for simplicity, the database emulator's interface provides only operations to read and write attributes of individual records.  it does not provide operations to insert or delete records.  [2016-10-03 I revised this sentence: to simplify initialization of the database, a read or write operation implicitly creates a record, if a record with the specified ID does not already exist, and the values of the attributes are initialized to the empty string.]
+
+[2016-10-07: the database emulator simply updates its in-memory copy of the data that it read from the XML file at start-up.  it does not write any updates to disk.  all updates are lost when the database emulator exits. ]
+
+------------------------------------------------------------
+MASTER
+
+I suggest that the system have a "master" process (the initial process) responsible for coordination during system startup.  it should create all of the other processes.
+
+------------------------------------------------------------
+CLIENTS
+
+each client repeatedly sends a request, waits for a response, and then sends another request.
+
+the system supports both of the following ways of specifying each client's workload (i.e., the sequence of requests it sends):
+
+(1) an explicit sequence of requests, given in a configuration file.
+
+(2) a function that creates a pseudo-random sequence of requests.  the function has various parameters whose values are given in a configuration file.  the parameters include, but are not limited to, a seed for the pseudo-random number generator, and the number of requests to generate.
+
+------------------------------------------------------------
+CONFIGURATION
+
+all processes read configuration information from a configuration file whose name is specified on the command line.  for simplicity, all processes read the same configuration file, and each kind of process ignores irrelevant information.
+
+the configuration file contains enough information to specify a test case; thus, a user can run different test cases simply by supplying different configuration files.  information in the configuration file includes, but is not limited to, the number of clients, the number of coordinators, the number of workers per coordinator, the name of the policy file, the name of the database initialization file, minDBlatency, maxDBlatency, and a specification of each client's workload (different clients may have different workloads).
+
+the configuration file should have a self-describing format, in the sense that parameter names are explicit, e.g., minDBlatency=1.  do not use a format in which the value on line 1 implicitly means X, the value on line 2 implicitly means Y, etc.
+
+give configuration files and log files meaningful names!  this will help you keep track of them and help graders understand them.
+
+------------------------------------------------------------
+LOGS
+
+each process, including the database emulator, should generate comprehensive log data describing initial settings, the content of every message received, the content of every message sent, and full details of every significant internal action.  Examples (not exhaustive!) of significant internal actions are: a request evaluation commits, a request evaluation aborts due to a conflict, tentative updates are performed, a request evaluation aborts due to dependency on an aborted tentative update.  every log entry should contain a real-time timestamp.  every log entry for a sent message should contain a send sequence number n, indicating that it is for the n'th message sent by this process.  every log entry for a received message should contain a receive sequence number n, indicating that it is for the n'th message received by this process. [2016-10-14: if you don't need the send equence number or receive sequence number to control artificial delays, then you can omit it from the log.]
+
+at the end of each test case, the entire content of the attribute database should be dumped to the log file.
+
+the log file should have a self-describing format, in the sense described above.  for example, every component of a message should be labeled to indicate its meaning.
+
+processes may write to individual log files or a common log file (in this case, each log entry should be labeled with the process that produced it).
+
+------------------------------------------------------------
+TESTING
+
+testing should be thorough in the sense that all cases in the algorithm are exercised, in clearly described test cases.  Examples (not exhaustive) of cases that should be exercised include: (1) a request evaluation aborts due to a conflict on a subject attribute, (2) a request evaluation aborts due to a conflict on a resource attribute, (3) a request evaluation aborts due to dependency on a tentative update, (4) a request evaluation is delayed because it depends on a tentative update by a request that has not yet committed or aborted. [2016-09-30: deleted test case (5), due to update in Q&A item 5, below.]
+
+thorough testing requires the ability to exercise these scenarios in a reproducible manner.  to achieve this, the system should contain code that introduces artificial delays, controlled by parameters in the configuration file.  for example, to cause a request evaluation r1 to abort due to a conflict caused by a request evaluation r2 writing a subject attribute read by r1, introduce a delay before the worker sends the result of r1 to the subject coordinator, (so the result arrives after r2 commits).  to support this, the configuration file can specify that specified send events, identified by send sequence number [2016-09-30: or by request ID, if request IDs are specified in the configuration file], in specified processes should be delayed by a specified duration.
+
+test cases targeted at specific algorithm cases should be as simple as possible, so it is easy to analyze the log and determine whether the system passed the test.  in addition to these targeted test cases, testing should include some "stress tests" with more clients (say, 10), more subjects and resources (tens), and more requests (hundreds).  passing the stress tests should require more than absence of runtime errors: you should describe (in testing.txt) some checks on the final content of the attribute database that determine whether all requests were processed.
+
+your submission should contain a file named testing.txt with an entry for every test case.  each entry should include: (1) the specific aspect of the algorithm targeted by the test case, (2) description of the workload/scenario (i.e., the pattern of requests and artificial delays, if any), (3) the name of the configuration file used to run the test case, (4) other information (if any) needed to run the test case (e.g., other files that should contain certain content), (5) the name of the log file produced by running the test case, (6) the outcome (pass or fail), with a brief explanation of the problem in case of failure.
+
+in this phase, testing with all processes running on a single host is sufficient, because the current DistAlgo documentation does not describe how to run processes on different hosts.  this feature will be documented in an upcoming release, and we will probably use it in a future phase.
+
+======================================================================
+PHASE 3: PSEUDO-CODE FOR ALGORITHM BASED ON MVCC-TSO
+
+write pseudocode for the algorithm based on multiversion concurrency control with timestamp ordering (MVCC-TSO) described in the accompanying document.  for background on MVCC-TSO, see the posted excerpt from Chapter 15 of Silberschatz, Korth, and Sudarshan, Database System Concepts, 6th ed., McGraw-Hill, 2011.
+
+parts of the algorithm are already presented in pseudocode or English close to pseudocode, so writing pseudocode for the entire algorithm should not be too difficult.  as mentioned in the algorithm description, "the algorithm's handling of read-only requests and its handling of requests that update 1 object are described separately...  however, the two cases have a lot in common and should be merged in the final pseudocode."  you pseudocode should  avoid unnecessary communication when the same coordinator is responsible for the subject and resource.  your pseudocode does not need to support requests that write multiple objects. [2016-11-01: your pseudocode should incorporate the recommended approach to preventing starvation of write requests.]
+
+comments and corrections are welcome.  suggestions to simplify or improve the algorithm, improve its presentation, or improve the algorithm's performance are especially welcome.
+
+======================================================================
+PHASE 4: IMPLEMENTATION OF ALGORITHM BASED ON MVCC-TSO
+
+Most of the comments for phase 2 apply to phase 4, too.  The implementation must be in DistAlgo.  Each process should read configuration information from a configuration file.  Each process should generate comprehensive log data.  
+
+------------------------------------------------------------
+TESTING
+
+testing should be thorough in the sense that all cases in the algorithm are exercised, in clearly described test cases.  Examples (not exhaustive) of cases that should be exercised include: 
+
+(1) the coordinator coord(oW) for the object oW written by a read-write request r receives the result of r from the worker and immediately commits r, because the pendingMightRead sets for relevant attributes are empty; to make this scenario non-trivial, some of those pendingMightRead sets should be non-empty at some time between when coord(oW) forwards r to the worker and when coord(oW) receives the result of r from the worker, and they should contain some other read-write requests as well as some read-only requests.
+
+(2) similar to (1), except that the commit of r is delayed, because some of the pendingMightRead sets for relevant attributes are non-empty when coord(oW) receives the result of r from the worker.
+
+(3) the coordinator coord(oW) for the object oW written by a read-write request r receives the result of r from the worker, immediately detects a conflict, and re-starts r.
+
+(4) the coordinator coord(oW) for the object oW written by a read-write request r receives the result of r from the worker, waits for relevant pendingMightReads to be resolved, and then detects a conflict and re-starts r.
+
+(5) similar to (2), except the client incorrectly predicts which object is written.
+
+(6) similar to (4), except the client incorrectly predicts which object is written.
+
+in some test cases, oW should be the subject; in others, oW should be the resource.  in some test cases, mightReadAttr and mightWriteAttr should be the set of attributes actually read or written, respectively; in others, they should be overapproximations.
+
+as described above for phase 2, testing should be reproducible, should include simple test cases targeted at specific algorithm cases, and should include some stress tests.
+
+as described above for phase 2, your submission should contain a file named testing.txt with a detailed entry for every test case.
+
+------------------------------------------------------------
+PERFORMANCE EVALUATION
+
+the performance evaluation should compare the latencies of the MVSS-TSO algorithm and decat+'s algorithm in various cases, including: (1) read-only request, (2) read-write request for which the client correctly predicts the written object, and (3) read-write request for which the client incorrectly predicts the written object.  latency should be measured from when the client sends the request until the client receives the result.  
+
+as in the latency measurements in [Decat+ 2015, Section 4.2], latency should be measured as a function of the number of coordinators, ranging from 1 to 10.  each coordinator should be deployed with 1 worker.  a single client should send requests.  it should send only one request at a time.  as in [Decat+ 2015, Section 4.2], "the workers perform an artificial policy evaluation of 0ms".  for example, add a boolean option named "ZeroLatency" for workers in the configuration file.  When set to True, the worker does not read any policy file, and it immediately replies to every request with "Permit; readAttributes = emptyset; updates = emptyset".  each measurement should report the mean and standard deviation for 1000 requests.
+
+more details about performance evaluation may be added later.  one open issue is the release date of the next DistAlgo version, with documentation for running different processes on different hosts.
+
+======================================================================
+SUBMISSION DETAILS FOR PHASES 2 AND 4
+
+the zip (or tar) file should have the following structure and contents:
+
+  README.txt  see details below
+  testing.txt description of testcases
+  config/     configuration files
+  src/        source code
+  logs/       log files from running all testcases described in testing.txt
+  pseudocode/ current version of material from phase1
+
+README.txt should contain the following sections:
+
+  INSTRUCTIONS.  instructions to build and run your system.  the
+  instructions should not assume that an IDE is installed.  provide 
+  a detailed sequence of commands, a shell sript, a Makefile, or something
+  similar.  include a specific example of the command to run a selected
+  testcase.
+
+  MAIN FILES.  The full pathname of the files containing the main code
+  for the client, coordinator, worker, and master.  (this will help 
+  graders look at the most important code first.)
+
+  BUGS AND LIMITATIONS.  a list of all known bugs in and limitations of
+  your code.
+
+  CONTRIBUTIONS.  a list of contributions of each team member to the
+  current submission.  this should reflect how the work was divided between
+  the team members.  generally, a dozen lines or so is sufficient detail.
+
+  OTHER COMMENTS.  anything else you want us to know.
+
+pseudocode/ should contain updated pseudocode, consistent with the code in src/.  the grader may refer to the pseudocode to help understand your code.
+
+======================================================================
+GRADING OF PHASES 2 AND 4
+
+grading criteria include:
+
+functional correctness
+
+thorough testing, clearly documented in testing.txt and informative log files.
+
+consistency of code and pseudocode
+
+code quality.  this encompasses all aspects of code quality other than functional correctness, including clarity, readability, maintainability, extensibility, and efficiency.  one general measure of clarity is similarity to high-level pseudo-code.  other factors include:
+
+  Sufficient comments
+
+  Meaningful names for classes, methods, variables, etc.
+
+  Consistent coding conventions
+
+  Modularity.  The code should be structured in a reasonable way into
+  packages (if appropriate), classes and methods.  
+
+  Appropriate use of DistAlgo and Python language features, such as
+  quantification, set comprehension, list comprehension, inheritance,
+  methods, and assertions.  For example, methods, inheritance, and loops
+  should be used to avoid repeating blocks of similar code.
+
+there is sometimes a trade-off between clarity and efficiency.  in many settings, including this class, clarity, readability, maintainability, etc., are more important than minor performance improvements.  therefore, you should eliminate all inefficiencies that can be eliminated without appreciably reducing clarity (by complicating the code), but do not sacrifice clarity for the sake of minor performance improvements.  if you are uncertain whether you are striking the correct balance, you are welcome to ask for guidance, preferably during office hours.
+
+======================================================================
+SUBMISSION INSTRUCTIONS
+
+PHASE 0: send the email by 11:59pm on the due date.
+
+PHASES 1 and 3: submit a printout in class on the due date, and submit the document in the Assignments area on Blackboard by 11:59pm on the due date.  the file should be named lastname1-lastname2-phaseN.pdf (or .docx, .txt, or whatever); for example, chandy-lamport-phase1.pdf.
+
+PHASES 2 and 4: submit a .zip or .tar.gz file in the Assignments area in Blackboard by 11:59pm on the due date.  the file should be named lastname1-lastname2-phaseN.zip or lastname1-lastname2-phaseN.tar.gz.
+
+when you submit assignments on Blackboard, please leave the Comment box blank.  we look only at the uploaded files.
+
+============================================================
+DEMO [2016-10-11]   [2016-10-17: added demo location]
+
+demos will be held in CS 2217 (same room as TA office hours).  you may run the demo on your own laptop or a lab PC.
+
+bring printouts of your README and testing.txt to the demo.  the TA will keep them after the demo and might write notes on them.
+
+Demos proceed as follows:
+
+1. Download your submission from Blackboard.
+
+2. Delete all .pyc files.
+
+3. Run a prepared sequence of testcases that demonstrate that all requirements on the grading sheet are satisfied.  Be prepared to indicate which testcase covers each requirement.  Be prepared to point out the most important events in the logs, as evidence that the system operated correctly.  The TA may ask you to run additional testcases.
+
+You should rehearse the sequence of testcases to ensure it fits in the allocated demo time.
+
+All expected activity must be shown clearly in readable and detailed logs,
+otherwise points will be deducted for inadequate logs and for functionality
+that cannot be adequately evaluated due to inadequate logs.  Only partial
+credit will be given for functionality not demonstrated during the
+allocated demo timeslot.
+
+============================================================
+PHASE 2 DEMO SIGNUP [2016-10-14]
+
+each team should sign up for one demo timeslot using this google calendar link:
+
+https://calendar.google.com/calendar/selfsched?sstoken=UUFYbVVIR0EzSHZ0fGRlZmF1bHR8N2Q5Zjg3ZWFmN2MyM2UzMGZmOGE2MDljNWU2NzQ3MWY
+
+an available timeslot is represented by a gray box labeled "phase 2 demo".  a timeslot that you booked is represented by a dark blue rectangle the same size as the grey ones.  ignore the tall blue rectangles, if any.  to book a timeslot, click on it, and fill out the dialog box.  to cancel, delete the event from your own google calendar.
+
+make sure your google calendar is "(GMT-05:00) Eastern Time", as follows.
+navigate to your google calendar, click the gear icon in the upper right, click Settings in the resulting pop-up menu, and check the setting for "Your Current Time Zone".
+
+[2016-10-17: you must signup for a demo at least 48 hours in advance, so the TA can plan his schedule accordingly.]
+
+a later demo does not give more time to work on the project, because you download and run the code you submitted on blackboard.
+
+============================================================
+PHASE 4 DEMO SIGNUP [2016-11-17]
+
+each team should sign up for exactly one 45-minute phase 4 demo timeslot using this doodle poll: http://doodle.com/poll/ny6pmab3wm4qev9t
+
+to help the TA plan his schedule, the deadline for demo signup is 11:59pm thu, dec 1.  any team that signs up after this deadline will incur a lateness penalty on the demo.
+
+======================================================================
+SCHEDULE: DUE DATES
+
+sep 14 phase 0: team formation
+sep 23 phase 1: pseudo-code for original algorithm (1.5 weeks)
+oct 16 phase 2: implementation of original algorithm (3 weeks) [was: oct 14]
+oct 24 problem set 1 [was: oct 21]  DEADLINE STRICTLY ENFORCED
+oct 28 midterm exam
+nov  4 last day for phase 2 demos [added 2016-01-22]
+nov 14 phase 3: pseudo-code for algorithm based on MVCC-TSO [was: nov 11]
+dec  4 phase 4: implementation of algorithm based on MVCC-TSO (3 weeks)
+dec  9 problem set 2
+dec 5-16 phase 4 demos
+dec 21 final exam, 2:15pm-5pm (includes 15 minutes for exam administration)
+
+the time interval in parentheses is the amount of time allocated for work
+on that phase of the project.
+
+======================================================================
+GRADING WEIGHTS (TENTATIVE)
+
+15% phase 1: pseudo-code for original algorithm
+35% phase 2: implementation of original algorithm
+20% phase 3: design of improved algorithm
+30% phase 4: implementation of improved algorithm
+
+these weights are relative to the weight of the project in the course grade.
+
+======================================================================
+Q & A (copies of selected questions and answers from discussion on Blackboard)
+
+----------------------------------------
+1.
+> section 3, 3rd to last paragaph, "This coordinator then restarts the evaluation as described before and will also restart evaluations that employed the tentatively updated subject attributes (this is checked before checking for conflicting subject updates)."
+
+A1. the parenthetical remark refers to the subject coordinator checking whether the evaluation of the current request r used any tentative updates produced by an evaluation of an earlier request that was aborted and restarted.  the subject coordinator checks for this before checking for conflicting subject updates.
+
+----------------------------------------
+2.
+ > I quote from paper "This coordinator assigns a globally unique id to this evaluation, sets up the administration for the subject, adds any tentatively updated attributes to the request" [Point 3.4 Distributed coordinator's protocol]. Please help us understand what "administration for the subject/resource" refers to in this context?
+
+it just means to update whatever data structures are needed to accomplish the other tasks described as part of the algorithm.
+
+ > Since, to control concurrency, the coordinator checks if the attribute read by worker is recently updated, is it safe to assume that coordinator will read data from attribute database if it doesn't have it on its cache? 
+
+coordinators never read from the attribute database.  in a simple version of the algorithm, each coordinator would permanently store information about the most recent update to each attribute of each subject (or resource) for which it is responsible (but see below for a more practical version).  the coordinator uses this information to check for conflicts.  
+
+note that the coordinator does not necessarily need to know the actual values of the attributes.  it is more efficient to check for conflicting updates by comparing timestamps rather than values.  [2016-09-22: on the other hand, the following optimization is possible if the coordinator stores the value of an attribute together with the timestamp of the most recent update to it: if the next update writes the same value to the attribute, then the timestamp of the most recent update does not need to be modified.]
+
+ > Follow up question on question two: How long does the data stay in the cache of the coordinator after update to attribute database? Does the algorithm assume data is always available on cache?
+
+in a more practical version of the algorithm, the coordinator would discard (garbage collect, you might say) information about the most recent update to some attributes.  for example, information about the most recent updates to the attributes of a particular subject can be discarded (for purposes of conflict detection) if there are no in-progress requests involving that subject (because those updates cannot conflict with future requests).
+
+keep in mind that the coordinator also caches recent updates for an unrelated reason, namely, to deal with the fact that the attribute database has a non-negligible latency before updates are propagated to all replicas.  Recent updates need to be cached (and piggybacked on requests that might read them) by the coordinator until they have propagated to all replicas of the attribute database, as described in section 3.5.  You can assume that this propagation will occur within a specified latency, which is a parameter of the algorithm.
+For clarity, I recommend that the information about recent updates cached for these two different purposes (for conflict detection, or to overcome database latency) be stored in two separate caches, i.e., two separate data structures.
+
+[2016-09-22: note: the information stored for conflict detection is not a "cache" in the traditional sense; perhaps I should have avoided using that term for it.  I called it a "cache", because information needs to be stored in it only temporarily; old information can be garbage-collected.]
+
+----------------------------------------
+3.
+ > In section 3.4 - Step 9 reads, "Subject coordinator checks whether the evaluation employed subject attributes that were updated in the mean while. If not, it tentatively executes the updates of subject attributes".
+
+ > We understand that if there is no conflict (for subject attributes), tentative update of subject attributes happen at this point.
+ > Incase if the current evaluation referred to a tentative update of an earlier evaluation,what happens if the earlier evaluation is not completed - still running? Should we wait or restart in this case?
+
+Good question!  Wait.
+
+----------------------------------------
+4.
+the paper mentions that the subject coordinator checks for dependency on tentative updates before checking for conflicts on subject attributes.  to see why the order of these checks is important, note that the check for dependency on tentative updates can cause a request to be delayed waiting for the commit of requests it depends on, and conflicts can arise while it is waiting.  therefore, the check for conflicts on subject attributes should be done after the check for dependency on tentative updates finishes.
+
+----------------------------------------
+5.
+OLD:
+it is possible that a subject coordinator sc performs a tentative update for request r1 and sends r1 to the appropriate resource coordinator rc1, then sc performs a tentative update for request r2 and then sends r2 to the appropriate resource coordinator rc2, and then sc receives a response from rc2 before receiving a response from rc1.  in this case, sc should delay acting on the response from rc2 until after receiving the response from rc1, to ensure that updates from r1 and r2 get committed to the attribute database in the same order that they were tentatively executed.
+
+NEW:
+even if r1 and r2 access disjoint sets of attributes, the conditions in a policy rule might refer to attributes in both sets, and hence the order in which their updates are performed is still significant.  nevertheless, it is OK to commite the updates to the attribute database in either order.
+
+suppose the rule that refers to attributes in both sets is used to justify the decision for some other request r3 that the subject coordinator received after performing tentative updates by r1 and before performing tentative updates by r2.  thus, r3 sees the (tentative) updates by r1 and not those by r2.
+
+even if the subject coordinator commits the updates from r2 to the attribute database before committing updates from r1, it is impossible for evaluation of some other request r4 to see the updates of r2 but not those of r1, because the subject coordinator will include r1's tentative updates with r4 when it sends r4 to the worker.
+
+so, the delay is unnecessary in this case.  
+
+----------------------------------------
+6. [2016-09-30]
+a single coordinator process can be both a subject coordinator and a resource coordinator.  in other words, the set of subjects and the set of resources are partitioned uniformly across the same set of coordinator processes.  this is implied by the following comment in section 4.2 of the paper: "This is the result of our strategy to uniformly distribute the management responsibilities over the available coordinators (see Section 3.4), which makes the chance that the same coordinator is responsible for both the subject as well as the resource of a single evaluation equal to 1/nbCoordinators."
+
+----------------------------------------
+7. [2016-10-03] DistAlgo's built-in Lamport clock
+
+the DistAlgo language reference mentions that the command
+
+config(clock = 'Lamport')
+
+configures the system to use Lamport clock.  this defines a function logical_clock() that returns the current value of the logical clock.  although undocumented, it also causes every message to have an associated named component "clk" containing the message's timestamp from the Lamport clock.  It can be accessed in the same way as the named component "from_" mentioned in the manual.  this is illustrated by the following line in pingpong/ping.da:
+
+            await(some(received(('Pong',), clk=rclk), has=(rclk > clk)))
+
+since rclk is an unbound variable, pattern matching assigns the received message's timestamp to rclk.
