@@ -44,8 +44,8 @@ class Init(process):
             return -1
 
     def run():
-        numCoordinator=1
-        numWorkerPerCoordinator=2
+        numCoordinator=2
+        numWorkerPerCoordinator=10
         if initProcesses(numCoordinator,numWorkerPerCoordinator):
             output("Failed to setup the environment")
             sys.exit(-1)
