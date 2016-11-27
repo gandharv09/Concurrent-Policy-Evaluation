@@ -28,13 +28,17 @@ class Coordinator(process):
             output("Received Request from Client")
             evaluate(sender, request, order)
         elif str == 'updateReadAttr':
-            output("Received readAttr from worker")
+            output("Received updateReadAttr from worker")
             updateReadAttr(sender, request, order)
         elif str == 'updateObj':
-            output("Received readAttr from worker")
+            output("Received updateObj from worker")
             updateWriteAttr(sender, request, order)
+        elif str == 'restartRequest':
+            output("Received restartRequest from coordinator")
+            restartRequest(sender, request, order)
 
 
+    def restartRequest(sender, request, order):
 
     def evaluate(sender, request, order):
 
@@ -94,6 +98,7 @@ class Coordinator(process):
             v.pendingMightRead.remove(request.reqId)
             if attr in request.readAttributes:
                 v.rts = request.reqTs
+        output("....Done Updating Read Attributes....")
 
 
     def updateWriteAttr(sender, request, order):
@@ -101,32 +106,69 @@ class Coordinator(process):
         output("....Updating Write Attributes....")
         object = obj(request, order)
 
+        self.writeQueue[request] = list()
+
+        output("Checking for first conflict")
         if checkForConflict(obj, request) is not True:
+            output("conflict not found")
 
             for K,V in request.updateAttributes.items():
                 pendingList = latestVersionBefore(object, K, request.reqTs).pendingMightRead
                 if len(pendingList) > 1 or (len(pendingList) == 1 and pendingList[0] != request.reqId):
                     for reqId in pendingList:
                         if reqId != request.reqId:
+                            output("adding conflicting read requests to write waiting queue and going to wait")
                             self.writeQueue.get(request).add(reqId)
                             return
 
+            output("Checking for second conflict")
             if checkForConflict(object, request) is not True:
+                output("conflict not found second time")
+
+                output("....Updating DB....")
                 updateDB(request)
+
+                output("....Updating Cache....")
                 updateCachedUpdates(object, request)
+
+                output("....Updating Latest Version Before....")
                 updateLatesVersionBefore(object, request)
+
 
                 for attr in defReadAttr(object, request):
                     v = latestVersionBefore(object, attr, request.reqTs)
                     v.pendingMightRead.remove(request.reqId)
-                    if attr in request.readAttributes:
+                    if attr in request.readAttributes[request.updatedObj]:
                         v.rts = request.reqTs
 
                 for attr in mightReadAttr(object, request):
                     v = latestVersionBefore(object, attr, request.reqTs)
                     v.pendingMightRead.remove(request.reqId)
-                    if attr in request.readAttributes:
+                    if attr in request.readAttributes[request.updatedObj]:
                         v.rts = request.reqTs
+
+                self.writeQueue.remove(request)
+
+                for K,V in self.readQueue.items():
+                    if request.reqId in V:
+                        V.remove(request.reqId)
+                        if len(V) == 0:
+                            self.readQueue.remove(K)
+                            coordinatorIndex = coord(obj(request, 1))
+                            send(("evalRequest", self.id, request, 1), to=coordinators[coordinatorIndex])
+
+
+
+
+            else:
+                output("Restarting Request because of conflict")
+                restart(object, request)
+        else:
+            output("Restarting Request because of conflict")
+            restart(object, request)
+
+    def restart(obj, request):
+
 
     def updateCachedUpdates(obj, request):
 
