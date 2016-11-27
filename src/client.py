@@ -61,7 +61,7 @@ class Client(process):
                 request.isWriteReq = True
 
             coordinatorIndex = coord(obj(request, 1))
-            send(("evalRequest",request),to=coordinators[coordinatorIndex])
+            send(("evalRequest",self.id, request, 1),to=coordinators[coordinatorIndex])
             requestSent+=1
             output(" Application Sending message to coordinator\n")
             if pseudoRandom and requestSent == numRequests:
