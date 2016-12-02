@@ -1,17 +1,13 @@
 {
-  "Case" :"Simple read write request without any conflicting attributes",
+  "Case" :"Basic case with view",
   "scenario":[
     {
-      "subject":"employeeA",
-      "resource":"bankA",
-      "action":"view",
-      "position":"employee"
-    },
-    {
-      "subject":"employeeB",
-      "resource":"bankB",
-      "action":"read",
-      "position":"employee"
+      "subject": "customerA",
+      "resource": "movie",
+      "action": "view",
+      "mightRead":"subscriptionType",
+      "defRead":"viewCount",
+      "mightWrite":"viewCount"
     }
   ]
 }

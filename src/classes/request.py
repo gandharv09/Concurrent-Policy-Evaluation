@@ -7,8 +7,11 @@ class Request:
         self.reqTs = 0
         self.isWriteReq = False
         self.cachedUpdates = dict()
-        self.readAttributes = dict()
+        self.readAttributes = list()
         self.updateAttributes = dict()
+        self.mightRead = list()
+        self.defRead = list()
+        self.mightWrite = list()
         self.updatedObj = None
         self.readOnlyObj = None
         self.decision = False

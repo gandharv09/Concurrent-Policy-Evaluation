@@ -1,21 +1,21 @@
 {
 	"objects": [{
 		"name": "customerA",
-		"attributes": [{
-			"name": "history",
-			"value": "empty"
-		}, {
-			"name": "viewCount",
-			"value": "0"
-		}]
-	}, {
+		"attributes":{
+            "name": "subscriptionType",
+            "value": "basic"
+        }
+    }, {
+        "name": "movieA",
+        "attributes":{
+          "name": "movieCount",
+          "value": "0"
+        }
+    }, {
 		"name": "customerB",
-		"attributes": [{
-			"name": "history",
-			"value": "bankA"
-		}, {
-			"name": "viewCount",
-			"value": "1"
-		}]
+		"attributes": {
+			"name": "subscriptionType",
+			"value": "premium"
+		}
 	}]
 }

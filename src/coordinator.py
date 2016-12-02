@@ -2,18 +2,17 @@ from classes import version as ver
 from classes import request as req
 from classes import attribute as att
 import time
-
+output=print
 config(channel='fifo')
 
 class Coordinator(process):
     def setup(numWorkers:int,coordinators:list,database:Database):
-
+        output("Inside setup of coordinator process")
         self.versionMap = dict()
         self.cachedUpdates = dict()
         self.readQueue = list()
         self.writeQueue = list()
 
-        output("In setup of coordinator process")
 
     def run():
         if (await(some(received(('evalRequest',sender, request, order))))):
@@ -39,7 +38,7 @@ class Coordinator(process):
 
 
     def restartRequest(sender, request, order):
-
+        pass
     def evaluate(sender, request, order):
 
         output("....Evaluating Request....")
@@ -175,10 +174,11 @@ class Coordinator(process):
         objCache = self.cachedUpdates.get(obj)
         for K,V in request.updateAttributes.items():
             if objCache.get(K) is not None:
-                objCache.get(K).add(att(K, V, request.reqTs))
+                #objCache.get(K).add(att.Attribute(K, V, request.reqTs))
+                objCache[k].append(att.Attribute(K, V, request.reqTs))
             else:
                 objCache[K] = list()
-                objCache[K].append(att(K, V, request.reqTs))
+                objCache[K].append(att.Attribute(K, V, request.reqTs))
 
     def updateLatestVersionBefore(obj, request):
 
@@ -191,7 +191,7 @@ class Coordinator(process):
             if self.versionMap.get(obj).get(attr) is None:
                 self.versionMap[obj][attr] = list();
 
-            self.versionMap[obj][attr].append(ver(0, request.reqTs))
+            self.versionMap[obj][attr].append(ver.Version(0, request.reqTs))
 
 
 
@@ -248,7 +248,7 @@ class Coordinator(process):
 
 
             if latestVersion is None:
-                latestVersion = ver()
+                latestVersion = ver.Version()
                 versionList.append(latestVersion)
         else:
             self.versionMap[obj] = dict()
@@ -265,7 +265,7 @@ class Coordinator(process):
         for attr in defReadAttr(object, request):
             if objCache.get(attr) is not None:
 
-                latestAttr = att()
+                latestAttr = att.Attribute()
                 for attrib in objCache.get(attr):
                     if attrib.ts <= request.reqTs and attrib.ts > latestAttr.ts:
                         latestAttr = attrib
@@ -276,7 +276,7 @@ class Coordinator(process):
         for attr in mightReadAttr(object, request):
             if objCache.get(attr) is not None:
 
-                latestAttr = att()
+                latestAttr = att.Attribute()
                 for attrib in objCache.get(attr):
                     if attrib.ts <= request.reqTs and attrib.ts > latestAttr.ts:
                         latestAttr = attrib

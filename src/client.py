@@ -1,8 +1,11 @@
 from classes import request as req
+import os,json
+output = print
 import time
 
 id = 0;
 class Client(process):
+    id = 0
     def setup(coordinators:list,configFile:str):
         output("Client setup with config file",configFile)
 
@@ -16,57 +19,43 @@ class Client(process):
             if (await(some(received(('resp_from_coordinator',b))))):
                     pass
 
-    def sendRequest():
+    def sendRequest(self):
         # This function sends requests to the subject coordinators by reading from the config file .
 
-        if not os.path.exists(configFile):
-            output("Config file %s not found"%configFile)
-            sys.exit(-1)
-
-        pseudoRandom=False
-        configData=open(configFile).read()
-        configData=json.loads(configData)
-
-        if configData.get('globalConfig').get('pseudoRandom') is not None:
-            output("Psuedo Random Requests Specified by user")
-            # user wants pseudo random requests.
-            numRequests=int(configData.get('globalConfig').get('numRequests'))
-            output("User wants to generate ",numRequests,"requests")
-            pseudoRandom=True
-        requestSent=0
-
-
+        if not os.path.exists(self.configFile):
+            output("ConfigFile does not exist")
+        configData = open(self.configFile).read()
+        try:
+            configData = json.loads(configData)
+        except :
+            output("Config File not in proper json syntax")
+            return
         for i in range(len(configData.get('scenarios'))):
-            output("Pseudo Random is ",pseudoRandom)
-            if  pseudoRandom == False:
-
-                scenarios = configData.get('scenarios')[i]
-            else:
-                # generate a random request.
-                idx=(random.randint(0,len(configData.get('scenarios'))-1))
-                scenarios=configData.get('scenarios')[idx]
-                output("Randomly picked request no ",idx)
-
+            scenarios = configData.get('scenarios')[i]
 
             request = req.Request()
             request.clientId = self.id
             request.objects.append(scenarios.get('subject'))
             request.objects.append(scenarios.get('resource'))
             request.action = scenarios.get('action')
+            if scenarios.get('defRead') is not None:
+                request.defRead = [ attr for attr in scenarios.get('defRead').split(",")]
+            if scenarios.get('mightRead') is not None:
+                request.mightRead = [attr for attr in scenarios.get('mightRead').split(",")]
+            if scenarios.get('mightWrite') is not None:
+                request.mightWrite = [attr for attr in scenarios.get('mightWrite').split(",")]
+
             request.reqId = Client.id
             Client.id += 1
             request.reqTs = int(time.time())
 
-            if mightWriteObj(request) is not None:
-                request.isWriteReq = True
+        if len(mightWriteObj(request)) ==0:
+            request.isWriteReq = True
 
-            coordinatorIndex = coord(obj(request, 1))
-            send(("evalRequest",self.id, request, 1),to=coordinators[coordinatorIndex])
-            requestSent+=1
-            output(" Application Sending message to coordinator\n")
-            if pseudoRandom and requestSent == numRequests:
-                output(" we are done with sending all the requests that the user wants.")
-                break
+        coordinatorIndex = coord(obj(request, 1))
+        output(" Application Sending message to coordinator\n")
+        send(("evalRequest",self.id, request, 1),to=coordinators[coordinatorIndex])
+
 
 
     def coord(object):
@@ -95,10 +84,13 @@ class Client(process):
 
 
     def receive(msg=(a,b)):
-        output("Application received a message ", a)
+        #output("Application received a message ", a)
         if a == 'resp_from_coordinator':
+            output("--------- DECISION RECEIVED------------")
             output("Application Received Decision for resource ",b.reqId)
-
+            output(" Decision is ",b.decision)
+            output("----------------------------------------")
 
     def mightWriteObj(request):
+        return request.mightWrite
         
