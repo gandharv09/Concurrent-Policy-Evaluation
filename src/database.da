@@ -1,0 +1,125 @@
+import traceback
+import json
+import time
+import os
+config(channel='fifo')
+class Database(process):
+    def setup(configFile:str):
+        output("Database started with config file ",configFile)
+        self.objectStore = dict()
+        if loadConfig(configFile):
+            # failed to load the config file
+            output("Failed to load data from the config file")
+        else:
+            # reading and loading config file was successful.
+            output("After Initial load db is\n")
+
+            output(self.objectStore)
+
+    def loadConfig(preInitConfigFile):
+
+        if not os.path.exists(preInitConfigFile):
+            output("Database preInit Config file %s not found"%preInitConfigFile)
+            return -1
+        try:
+            preConfigData=json.loads(open(preInitConfigFile).read())
+            currentTime = int(time.time())
+            for objects in preConfigData.get("objects"):
+                objName = objects.get('name')
+                self.objectStore[objName] = dict()
+                #self.objectStore[objects]['name'] = objects.get('name')
+                #self.objectStore[objects.get('name')]['attributes'] = dict()
+                attrMap = objects.get('attributes')
+                #for k,v in objects.get('attributes').items():
+                    #self.objectStore[objName][k] = list()
+                    #self.objectStore[objects.get('name')][k].append((currentTime, v))
+                self.objectStore[objName][attrMap.get('name')] = list()
+                self.objectStore[objName][attrMap.get('name')].append((currentTime, attrMap.get('value')))
+
+            return 0
+
+        except:
+            output("Json file not in correct syntax")
+            output("STACK TRACE")
+            print(traceback.print_exc())
+            return -1
+
+    def run():
+        while True:
+            if await(some(received(('read_request', object, attribute, timestamp, sender)))):
+                #processReadRequest(object,attribute,timestamp,sender)
+                pass
+            if await(some(received(('write_request',object,attribute,timestamp,value)))):
+                #processWriteRequest(object,attribute,timestamp,value)
+                pass
+
+    def receive(msg=('read_request',request,sender)):
+        processReadRequest(request, sender)
+
+    def receive(msg=('write_request',object,attribute,timestamp,value)):
+        processWriteRequest(object,attribute,timestamp,value)
+
+    def processReadRequest(request,sender):
+        output("DB Received read request from worker")
+        try:
+            retVal = dict()
+            reqTS = request.reqTs
+            retVal[request.objects[0]] = dict()
+            for attr in self.objectStore[request.objects[0]].keys():
+                timestamps = []
+                for value in  self.objectStore[request.objects[0]][attr]:
+                    if value[0] <=reqTS:timestamps.append(value[0])
+                timestamps.sort()
+                requiredTS = timestamps[-1]
+                for value in self.objectStore[request.objects[0]][attr]:
+                    if value[0] == requiredTS:retVal[request.objects[0]][attr]=value[1]
+            retVal[request.objects[1]] = dict()
+            for attr in self.objectStore[request.objects[1]].keys():
+                timestamps = []
+                for value in  self.objectStore[request.objects[1]][attr]:
+                    if value[0] <=reqTS:timestamps.append(value[0])
+                timestamps.sort()
+                requiredTS = timestamps[-1]
+                for value in self.objectStore[request.objects[1]][attr]:
+                    if value[0] == requiredTS:retVal[request.objects[1]][attr]=value[1]
+            '''
+            attributes = []
+            for attr in request.mightReadAttr:
+                attributes.append(attr)
+            for attr in request.defReadAttr:
+                attributes.append(attr)
+            timeStamps = []
+            requiredTimeStamp = 0
+            for values in self.objectStore[object]:
+                timeStamps.append(values[0])
+            timeStamps.sort()
+
+            timeStamps = [ ts for ts in timeStamps if ts <=timestamp]
+
+            requiredTimeStamp = timeStamps[-1]
+            for attribute in attributes:
+                for values in self.objectStore[object]['attributes'][attribute]:
+                    if values[0] == requiredTimeStamp:
+                        retVal[attr] = values[1]
+            output("Db returning value ", retVal)
+            send(('db_read_response', retVal),to = sender)
+            '''
+            output("DB Returning ",retVal)
+            request.readDB = retVal
+            send(('dbResponse',request),to = sender)
+        except:
+            import traceback
+            print(traceback.print_exc())
+            output("Invalid arguments to processReadRequest")
+
+            
+
+
+    def processWriteRequest(object,attribute,timeStamp,value):
+        try:
+            self.objectStore[object]['attributes'][attribute].append((timeStamp, value))
+        except KeyError:
+            output("Invalid arguments to writeRequest")
+
+
+

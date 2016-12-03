@@ -8,8 +8,8 @@
     }, {
         "name": "movieA",
         "attributes":{
-          "name": "movieCount",
-          "value": "0"
+          "name": "viewCount",
+          "value": "5"
         }
     }, {
 		"name": "customerB",

@@ -2,7 +2,7 @@
 
 <rule name="customers collectively can view each movie at most 5 times">
 <subjectCondition position="customer"/>
-<resourceCondition type="movieA" viewCount="<5"/>
+<resourceCondition type="movieA" viewCount="&lt;5"/>
 <action name="view"/>
 <resourceUpdate viewCount="++"/>
 </rule>

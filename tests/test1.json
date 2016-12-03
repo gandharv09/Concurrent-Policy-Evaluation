@@ -1,13 +1,19 @@
 {
-  "Case" :"Basic case with view",
-  "scenario":[
-    {
-      "subject": "customerA",
-      "resource": "movie",
-      "action": "view",
-      "mightRead":"subscriptionType",
-      "defRead":"viewCount",
-      "mightWrite":"viewCount"
-    }
-  ]
+	"globalConfig": {
+		"numCoordinators": "10",
+		"numWorkerPerCoordinator": "3",
+		"minDBLatency": "3",
+		"maxDBLatency": "5"
+	},
+
+
+	"scenarios": [{
+		"subject": "customerA",
+		"resource": "movieA",
+		"action": "view",
+		"mightReadAttr": "subscriptionType",
+		"defReadAttr": "viewCount",
+		"mightWriteObj": "movieA",
+		"mightWriteAttr": "viewCount"
+	}]
 }

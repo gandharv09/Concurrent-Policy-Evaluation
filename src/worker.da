@@ -1,0 +1,164 @@
+from xml.etree import ElementTree as ET
+import os
+config(channel='fifo')
+class Worker(process):
+
+    def setup(coordinatorList:list, dbProcess:Database, policyFile:str):
+        self.dbProcess=dbProcess
+        self.coordinatorList = coordinatorList
+        if not os.path.exists(policyFile):
+            output("ERROR:Policy File does not exist")
+        else:
+            # policy file exists and is proper.
+            self.policyFile = policyFile
+
+    def run():
+        if await(some(received(('workerRequest',request)))):
+            pass
+        if await(some(received(('dbResponse',response,retVal)))):
+            pass
+    '''
+    def receive(*args):
+        output("Inside worker receive")
+        if args[0] == 'workerRequest':
+            output("Worker received evalRequest from coordinator")
+            processCoordinatorRequest(args[1])
+        if args[0] == 'dbResponse':
+            output("Worker received response from db")
+            evaluatePolicy(args[1], args[2])
+    '''
+    def receive(msg=(a,b)):
+        if a == 'workerRequest':
+            output("Worker received evalRequest from coordinator")
+            processCoordinatorRequest(b)
+        elif a == 'dbResponse':
+            evaluatePolicy(b)
+    
+    
+    
+    
+    def sendResponseToCoordinator(request):
+        output("Worker Sending Response to coordinator")
+        send(('workerResponse',request), to = request.workerCoordinatorId)
+
+    def processCoordinatorRequest(request):
+        '''
+        send entire request to the database.
+        database will determine mightRead and defRead and return values
+        '''
+        output("Worker sending read request to db")
+        send(('read_request',request,self.id),to = self.dbProcess)
+        
+    def findRule(request):
+        try:
+            tree = ET.parse(policyFile)
+            root = tree.getroot()
+            for rule in root.iter('rule'):
+
+
+                if rule.find('action').attrib.get('name') == request.action:
+                        # possible candidate as action matches.
+                    if request.objects[0].find(rule.find('subjectCondition').attrib.get('position'))!=-1:
+                            # subject condition matched
+                            # check for resource condition
+                        if request.objects[1] == rule.find('resourceCondition').attrib.get('type'):
+                            # resource condition also matched, valid rule found.
+                            output("Found a matching rule for this policy")
+                            return rule
+            ## out of for loop , none of the rules matched ##
+            return -1
+        except :
+            import traceback
+            print(traceback.print_exc())
+            output("XML file not in proper syntax")
+            return -1
+
+    
+    def evaluatePolicy(request):
+        output("Inside Worker Evaluate Policy")
+        ################################################################
+        #                                                              #
+        # 1. Check for view Count attribute for movie                  #
+        # 2. If viewCount exceeds then check for subscription type     #
+        # 3. If both conditions return False, return False , else True #
+        ################################################################
+        matchedRule = findRule(request)
+        attrReadFromDB = request.readDB
+        if matchedRule == -1 :
+            # none of the rules matched return False
+            output("None of the rules matched for this request.")
+            request.decision = False
+            sendResponseToCoordinator(request)
+                # send
+        else:
+            # rule matched.
+            condition = matchedRule.find('resourceCondition').attrib.get('viewCount')
+            output("Need to validate that viewCount ",condition)
+            # first check for value in the cached updated in request.
+            output("Checking request cached updates for value")
+            if request.cachedUpdates.get(request.objects[1]) is not None:
+                currentViewCount = request.cachedUpdates.get(request.objects[1]).get('viewCount')
+                allowedViewCount = int(condition[1:])
+                if int(currentViewCount) +1 <= int(allowedViewCount):
+                    # valid , need to increment viewCount and return.
+                    request.updateAttributes['viewCount'] = currentViewCount + 1
+                    request.updatedObj = 1
+                    request.readAttributes.append('viewCount')
+                    request.decision = True
+                    sendResponseToCoordinator(request)
+                else:
+                    # view count exhausted , now need to check subscription type
+                    
+                    subscription = attrReadFromDB.get('subscriptionType')
+                    if subscription.upper() == 'PREMIUM':
+                            # premium subscription , so allow 
+                            request.updateAttributes['viewCount'] = currentViewCount + 1
+                            request.updatedObj = 1
+                            request.readAttributes.append('viewCount')
+                            request.decision = True
+                            request.readAttributes.append('subscriptionType')
+                            sendResponseToCoordinator(request)
+                    else:
+                        # not premium subscription.DENY !!!
+                            request.readAttributes.append('viewCount')
+                            request.decision = False
+                            request.readAttributes.append('subscriptionType')
+                            sendResponseToCoordinator(request)
+            else:
+                # viewCount not cached, need to query db
+                currentViewCount = attrReadFromDB.get(request.objects[1]).get('viewCount')
+                if currentViewCount is None:
+                    output("ERROR: attribue not found in the database")
+                    request.decision = False
+                    return sendResponseToCoordinator(coordinator)
+                     
+                else:
+                    # found a valid viewCount in the db
+                    allowedViewCount = int(condition[1:])
+                    if int(currentViewCount) +1 <= int(allowedViewCount):
+                        # valid , need to increment viewCount and return.
+                        request.updateAttributes['viewCount'] = str(int(currentViewCount) + 1)
+                        request.updatedObj = 1
+                        request.readAttributes.append('viewCount')
+                        request.decision = True
+                        output("Decision is True")
+                        output("Sending decision back to coordinator")
+                        return sendResponseToCoordinator(request)
+                    else:
+                        # viewCount exhausted, check for subscription type 
+                        subscription = attrReadFromDB.get(request.objects[0]).get('subscriptionType')
+                        if subscription.upper() == 'PREMIUM':
+                            # premium subscription , so allow 
+                            request.updateAttributes['viewCount'] = currentViewCount + 1
+                            request.updatedObj = 1
+                            request.readAttributes.append('viewCount')
+                            request.decision = True
+                            request.readAttributes.append('subscriptionType')
+                        else:
+                            # not premium subscription.DENY !!!
+                            request.readAttributes.append('viewCount')
+                            request.decision = False
+                            request.readAttributes.append('subscriptionType')
+                            output("Decision is False")
+                            return sendResponseToCoordinator(request)
+

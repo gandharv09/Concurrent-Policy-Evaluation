@@ -1,7 +1,7 @@
 
 import da
 _config_object = {}
-import os, sys, traceback, json, da
+import os, sys, traceback, json, random
 try:
     database = da.import_da('database')
     coordinator = da.import_da('coordinator')
@@ -19,9 +19,13 @@ class Init(da.DistProcess):
         pass
 
     def _da_run_internal(self):
-        numCoordinator = 1
-        numWorkerPerCoordinator = 2
-        if self.initProcesses(numCoordinator, numWorkerPerCoordinator):
+        if (not os.path.exists(sys.argv[2])):
+            self.output(('Config file %s does not exist.' % sys.argv[2]))
+            sys.exit((- 1))
+        configData = json.loads(open(sys.argv[2]).read())
+        numCoordinator = configData.get('globalConfig').get('numCoordinators')
+        numWorkerPerCoordinator = configData.get('globalConfig').get('numWorkerPerCoordinator')
+        if self.initProcesses(int(numCoordinator), int(numWorkerPerCoordinator)):
             self.output('Failed to setup the environment')
             sys.exit((- 1))
 
@@ -33,14 +37,17 @@ class Init(da.DistProcess):
             if (len(sys.argv) < 3):
                 self.output('Improper Arguments')
                 return (- 1)
+            objectCoordMap = dict()
+            objectCoordMap['movieA'] = random.randint(0, (numCoordinator - 1))
+            objectCoordMap['customerA'] = random.randint(0, (numCoordinator - 1))
             dbLoad = sys.argv[1]
             args = []
             args.append(dbLoad)
             da.setup(db, args)
             self.output('DbEmulator process set up')
-            da.setup(coordinators, (numWorkerPerCoordinator, list(coordinators), db))
+            da.setup(coordinators, (numWorkerPerCoordinator, list(coordinators), db, objectCoordMap))
             self.output('Coordinators have been setup')
-            da.setup(clients, (list(coordinators), sys.argv[2]))
+            da.setup(clients, (list(coordinators), sys.argv[2], objectCoordMap))
             self.output('Client process has been set up')
             da.start(clients)
             da.start(coordinators)

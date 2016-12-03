@@ -1,9 +1,10 @@
-import os,sys,traceback,json,da
+import os,sys,traceback,json,random
 
 try:
-    database=import_da("database")
-    coordinator=import_da("coordinator")
-    client=import_da("client")
+    database = import_da("database")
+    coordinator = import_da("coordinator")
+    client = import_da("client")
+    
 except ImportError:
     output("Failed to import class files")
 
@@ -21,15 +22,19 @@ class Init(process):
                 # improper arguments
                 output("Improper Arguments")
                 return -1
-
+            objectCoordMap = dict()
+            objectCoordMap["movieA"] = random.randint(0,numCoordinator -1)
+            objectCoordMap["customerA"] = random.randint(0, numCoordinator -1) 
             dbLoad = sys.argv[1]
             args = []
             args.append(dbLoad)
             setup(db,args)
             output("DbEmulator process set up")
-            setup(coordinators, (numWorkerPerCoordinator, list(coordinators), db))
+           
+            setup(coordinators, (numWorkerPerCoordinator, list(coordinators), db, objectCoordMap))
             output("Coordinators have been setup")
-            setup(clients, (list(coordinators), sys.argv[2]))
+            
+            setup(clients, (list(coordinators), sys.argv[2], objectCoordMap))
             output("Client process has been set up")
 
             # now we need to start all the processes in the system
@@ -44,16 +49,20 @@ class Init(process):
             return -1
 
     def run():
-        numCoordinator=2
-        numWorkerPerCoordinator=10
-        if initProcesses(numCoordinator,numWorkerPerCoordinator):
-            output("Failed to setup the environment")
-            sys.exit(-1)
+        
+            if not os.path.exists(sys.argv[2]):
+                output("Config file %s does not exist."%sys.argv[2])
+                sys.exit(-1)
+            configData=json.loads(open(sys.argv[2]).read())
+            numCoordinator=configData.get('globalConfig').get('numCoordinators')
+            numWorkerPerCoordinator = configData.get('globalConfig').get('numWorkerPerCoordinator')
+            if initProcesses(int(numCoordinator),int(numWorkerPerCoordinator)):
+                output("Failed to setup the environment")
+                sys.exit(-1)
 
 def main():
     init = new(Init)
     setup(init,())
-    #output(da.__version__)
     start(init)
     try:
         while True:

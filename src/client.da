@@ -1,0 +1,75 @@
+from classes import request as req
+import os,json,time
+import random
+import lib
+config(channel='fifo')
+ 
+class Client(process):
+    
+    def setup(coordinators:list,configFile:str,objectCoordMap:dict):
+        output("Client setup with config file",configFile)
+        self.objCoordMap = objectCoordMap
+         
+
+    def run():
+        i = 0
+        while True:
+            
+            if(i == 0):
+                sendRequest()
+                i = i+1
+            if (await(some(received(('resp_from_coordinator',b))))):
+                    pass
+
+    def sendRequest():
+    
+        # This function sends requests to the subject coordinators by reading from the config file .
+
+        if not os.path.exists(self.configFile):
+            output("ConfigFile does not exist")
+        configData = open(self.configFile).read()
+        try:
+            configData = json.loads(configData)
+        except :
+            output("Config File not in proper json syntax")
+            return
+        for i in range(len(configData.get('scenarios'))):
+            scenarios = configData.get('scenarios')[i]
+
+            request = req.Request()
+            request.clientId = self.id
+            request.objects.append(scenarios.get('subject'))
+            request.objects.append(scenarios.get('resource'))
+            request.action = scenarios.get('action')
+            if scenarios.get('defReadAttr') is not None:
+                request.defReadAttr = [ attr for attr in scenarios.get('defReadAttr').split(",")]
+            if scenarios.get('mightReadAttr') is not None:
+                request.mightReadAttr = [attr for attr in scenarios.get('mightReadAttr').split(",")]
+            if scenarios.get('mightWriteObj') is not None:
+                request.mightWriteObj = [attr for attr in scenarios.get('mightWriteObj').split(",")]
+            if scenarios.get('mightWriteAttr') is not None:
+                request.mightWriteAttr = [attr for attr in scenarios.get('mightWriteAttr').split(",")]
+
+            request.reqId = random.randint(0, 1000)
+            
+            request.reqTs = int(time.time())
+
+        if len(lib.mightWriteObj(request)) !=0:
+            request.isWriteReq = True
+
+        coordinatorIndex = lib.coord(lib.obj(request, 1), self.objectCoordMap)
+        output(" Application Sending message to coordinator\n")
+        send(("evalRequest",self.id, request, 1),to=coordinators[coordinatorIndex])
+
+
+
+    def receive(msg=(a,b)):
+        #output("Application received a message ", a)
+        if a == 'resp_from_coordinator':
+            output("--------- DECISION RECEIVED------------")
+            output("Application Received Decision for request ", b.reqId)
+            output(" Decision is ", b.decision)
+            output("----------------------------------------")
+
+    
+        
