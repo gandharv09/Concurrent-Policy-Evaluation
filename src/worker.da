@@ -3,7 +3,7 @@ import os
 config(channel='fifo')
 class Worker(process):
 
-    def setup(coordinatorList:list, dbProcess:Database, policyFile:str):
+    def setup(coordinatorList:list, dbProcess:Database, policyFile:str,objectCoordinatorMap:dict):
         self.dbProcess=dbProcess
         self.coordinatorList = coordinatorList
         if not os.path.exists(policyFile):
@@ -11,6 +11,7 @@ class Worker(process):
         else:
             # policy file exists and is proper.
             self.policyFile = policyFile
+        self.objectCoordinatorMap = objectCoordinatorMap
 
     def run():
         if await(some(received(('workerRequest',request)))):
@@ -95,7 +96,23 @@ class Worker(process):
             condition = matchedRule.find('resourceCondition').attrib.get('viewCount')
             output("Need to validate that viewCount ",condition)
             # first check for value in the cached updated in request.
-            output("Checking request cached updates for value")
+            #output("Checking request cached updates for value")
+            subscriptionType = attrReadFromDB.get(request.objects[0]).get('subscriptionType').upper()
+            if subscriptionType == 'PREMIUM':
+                ####################################################
+                # Premium Subscription, this is a read only request#
+                ####################################################
+                request.readAttributes.append([])
+                request.readAttributes[0].append('subscriptionType')
+                request.readAttributes.append([])
+                request.readAttributes[1].append('viewCount')
+                request.updatedObj = None
+                for i in range(2):
+                    coordIndex = lib.coord(lib.object(request,i),self.objectCoordinatorMap)
+                    send(('updateReadAttr', self.id, request, i), to = self.coordinatorList[coordIndex])
+                output("Worker Sending Decision to client for Read Only Request")
+                send(('evalDecision', request), to = request.clientId)
+                return 
             if request.cachedUpdates.get(request.objects[1]) is not None:
                 currentViewCount = request.cachedUpdates.get(request.objects[1]).get('viewCount')
                 allowedViewCount = int(condition[1:])
@@ -112,12 +129,22 @@ class Worker(process):
                     subscription = attrReadFromDB.get('subscriptionType')
                     if subscription.upper() == 'PREMIUM':
                             # premium subscription , so allow 
-                            request.updateAttributes['viewCount'] = currentViewCount + 1
-                            request.updatedObj = 1
-                            request.readAttributes.append('viewCount')
+                            # request.updateAttributes['viewCount'] = currentViewCount + 1
+                            request.updatedObj = None
+                            request.readAttributes.append([])
+                            request.readAttributes[0].append('subscriptionType')
+                            request.readAttributes.append([])
+                            request.readAttributes[1].append('viewCount')
+                            #request.readAttributes.append('viewCount')
                             request.decision = True
-                            request.readAttributes.append('subscriptionType')
-                            sendResponseToCoordinator(request)
+                            #request.readAttributes.append('subscriptionType')
+                            for i in range(2):
+                                coordIndex = lib.coord(lib.object(request,i),self.objectCoordinatorMap)
+                         
+                                #send(('updateReadAttr', self.id, request, to = self.coordinatorList[lib.coord(lib.object(request,i)))
+                                send(('updateReadAttr', self.id, request,i), to= self.coordinatorList[coordIndex] )
+                            output("Worker sending response to client for Read only Request")
+                            send(('evalDecision', request),to = request.clientId)
                     else:
                         # not premium subscription.DENY !!!
                             request.readAttributes.append('viewCount')

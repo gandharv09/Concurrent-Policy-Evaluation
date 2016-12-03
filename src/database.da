@@ -17,7 +17,7 @@ class Database(process):
             output(self.objectStore)
 
     def loadConfig(preInitConfigFile):
-
+   
         if not os.path.exists(preInitConfigFile):
             output("Database preInit Config file %s not found"%preInitConfigFile)
             return -1

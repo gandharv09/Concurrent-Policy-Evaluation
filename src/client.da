@@ -18,7 +18,7 @@ class Client(process):
             if(i == 0):
                 sendRequest()
                 i = i+1
-            if (await(some(received(('resp_from_coordinator',b))))):
+            if (await(some(received(('evalDecision',b))))):
                     pass
 
     def sendRequest():
@@ -65,7 +65,7 @@ class Client(process):
 
     def receive(msg=(a,b)):
         #output("Application received a message ", a)
-        if a == 'resp_from_coordinator':
+        if a == 'evalDecision':
             output("--------- DECISION RECEIVED------------")
             output("Application Received Decision for request ", b.reqId)
             output(" Decision is ", b.decision)

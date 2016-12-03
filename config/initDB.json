@@ -3,7 +3,7 @@
 		"name": "customerA",
 		"attributes":{
             "name": "subscriptionType",
-            "value": "basic"
+            "value": "premium"
         }
     }, {
         "name": "movieA",

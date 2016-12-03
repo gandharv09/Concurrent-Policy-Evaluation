@@ -13,7 +13,7 @@ class Coordinator(process):
     def setup(numWorkers:int,coordinators:list,database:Database,objectCoordMap:dict):
         #output("Inside setup of coordinator process")
         workers = new(worker.Worker,num = numWorkers)
-        setup(workers,(coordinators,database,"../config/policy.xml"))
+        setup(workers,(coordinators,database,"../config/policy.xml",objectCoordMap))
         start(workers)
         #output("Workers per coordinator have been setup")
         self.versionMap = dict()
@@ -61,6 +61,7 @@ class Coordinator(process):
             output("Request is of type Read-Only")
 
             for attr in defReadAttr(object, request):
+                #check mutable/immutable property.
                 v = latestVersionBefore(object, attr, request.reqTs)
                 v.rts = request.reqTs
 
@@ -111,12 +112,12 @@ class Coordinator(process):
     def updateReadAttr(sender, request, order):
 
         output("....Updating Read Attributes....")
-        object = obj(request, order)
+        object = lib.obj(request, order)
 
-        for attr in mightReadAttr(object, request):
+        for attr in lib.mightReadAttr(object, request):
             v = latestVersionBefore(object, attr, request.reqTs)
             v.pendingMightRead.remove(request.reqId)
-            if attr in request.readAttributes:
+            if attr in request.readAttributes[order]:
                 v.rts = request.reqTs
         output("....Done Updating Read Attributes....")
 
@@ -130,8 +131,9 @@ class Coordinator(process):
 
         output("Checking for first conflict")
         if checkForConflict(obj, request) is not True:
+            
+            '''
             output("conflict not found")
-
             for K,V in request.updateAttributes.items():
                 pendingList = latestVersionBefore(object, K, request.reqTs).pendingMightRead
                 if len(pendingList) > 1 or (len(pendingList) == 1 and pendingList[0] != request.reqId):
@@ -139,7 +141,8 @@ class Coordinator(process):
                         if reqId != request.reqId:
                             output("adding conflicting read requests to write waiting queue and going to wait")
                             self.writeQueue.get(request).add(reqId)
-                            return
+                            return 
+            '''               
 
             output("Checking for second conflict")
             if checkForConflict(object, request) is not True:
@@ -155,20 +158,20 @@ class Coordinator(process):
                 updateLatesVersionBefore(object, request)
 
 
-                for attr in defReadAttr(object, request):
+                for attr in lib.defReadAttr(object, request):
                     v = latestVersionBefore(object, attr, request.reqTs)
                     v.pendingMightRead.remove(request.reqId)
                     if attr in request.readAttributes[request.updatedObj]:
                         v.rts = request.reqTs
 
-                for attr in mightReadAttr(object, request):
+                for attr in lib.mightReadAttr(object, request):
                     v = latestVersionBefore(object, attr, request.reqTs)
                     v.pendingMightRead.remove(request.reqId)
                     if attr in request.readAttributes[request.updatedObj]:
                         v.rts = request.reqTs
 
                 self.writeQueue.remove(request)
-
+                '''
                 for K,V in self.readQueue.items():
                     if request.reqId in V:
                         V.remove(request.reqId)
@@ -176,7 +179,8 @@ class Coordinator(process):
                             self.readQueue.remove(K)
                             coordinatorIndex = coord(obj(request, 1))
                             send(("evalRequest", self.id, request, 1), to = coordinators[coordinatorIndex])
-
+                
+                '''
 
 
 
