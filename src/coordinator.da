@@ -67,11 +67,8 @@ class Coordinator(process):
 
             for attr in lib.mightReadAttr(object, request):
                 v = latestVersionBefore(object, attr, request.reqTs)
-
                 v.pendingMightRead.add(request.reqId)
-                output("------------------------------")
-                output(latestVersionBefore(object, attr, request.reqTs).pendingMightRead)
-
+                
         else:
             output("Request is of type Write")
 
@@ -132,7 +129,6 @@ class Coordinator(process):
                     output('attribute cache of object ', object, ' is empty')
         else:
             output('Could not found object ', object, ' in cache')
-            self.cachedUpdates[object] = dict()
         return cachedAttrs            
         
 
@@ -182,11 +178,10 @@ class Coordinator(process):
 
                 output("....Updating Cache....")
                 updateCachedUpdates(object, request)
-                logCacheUpdates()
+                
                 output("....Updating Latest Version Before....")
                 updateLatestVersionBefore(object, request)
-                logVersionMap()
-
+                
                 for attr in lib.defReadAttr(object, request):
                     v = latestVersionBefore(object, attr, request.reqTs)
                     output(v.__dict__)
@@ -201,6 +196,10 @@ class Coordinator(process):
                         v.rts = request.reqTs
 
                 del(self.writeQueue[request])
+                
+                output("Coordinator Sending Decision to client for Request")
+                send(('evalDecision', request), to = request.clientId)
+
                 logCacheUpdates()
                 logVersionMap()
 
@@ -228,8 +227,11 @@ class Coordinator(process):
         pass
 
     def updateCachedUpdates(obj, request):
-
+        if self.cachedUpdates.get(obj) is None:
+            self.cachedUpdates[obj] = dict()
+        
         objCache = self.cachedUpdates.get(obj)
+        
         ## need to handle null case over here ##
         for K,V in request.updateAttributes.items():
             if objCache.get(K) is not None:
@@ -242,7 +244,7 @@ class Coordinator(process):
     def updateLatestVersionBefore(obj, request):
 
         for attr in request.updateAttributes.keys():
-                v = latestVersionBefore(object, attr, request.reqTs)
+                v = latestVersionBefore(obj, attr, request.reqTs)
                 v.wts = request.reqTs
 
 
@@ -267,10 +269,25 @@ class Coordinator(process):
    
 
     def logCacheUpdates():
+       output("---------------------CacheUpdates-----------------------------")
        for k,v in self.cachedUpdates.items():
-           output()
+           output("Object : ",k)
+           for l,m in v.items():
+               output("Attribute : ", l)
+               for verObj in m:
+                   output("attribute : ", verObj.__dict__)
+       output("--------------------------------------------------")
+       
+
     def logVersionMap():
-       output(self.versionMap)
+       output("-----------------------VersionMap---------------------------")
+       for k,v in self.versionMap.items():
+           output("Object : ",k)
+           for l,m in v.items():
+               output("Attribute : ", l)
+               for verObj in m:
+                   output("version : ", verObj.__dict__)
+       output("--------------------------------------------------")
 
 
     def latestVersionBefore(obj, attr, ts):

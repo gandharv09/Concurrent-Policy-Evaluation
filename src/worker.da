@@ -1,6 +1,6 @@
 from xml.etree import ElementTree as ET
 import os
-import lib
+import lib, time
 config(channel='fifo')
 class Worker(process):
 
@@ -77,6 +77,7 @@ class Worker(process):
 
     
     def evaluatePolicy(request):
+        time.sleep(1)
         output("Inside Worker Evaluate Policy")
         ################################################################
         #                                                              #

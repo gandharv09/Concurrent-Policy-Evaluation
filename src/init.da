@@ -25,6 +25,8 @@ class Init(process):
             objectCoordMap = dict()
             objectCoordMap["movieA"] = random.randint(0,numCoordinator -1)
             objectCoordMap["customerA"] = random.randint(0, numCoordinator -1) 
+            objectCoordMap["customerB"] = random.randint(0, numCoordinator -1) 
+            
             dbLoad = sys.argv[1]
             args = []
             args.append(dbLoad)

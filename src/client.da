@@ -35,7 +35,7 @@ class Client(process):
             return
         for i in range(len(configData.get('scenarios'))):
             scenarios = configData.get('scenarios')[i]
-
+            output("Sending Request at index : ", str(i))
             request = req.Request()
             request.clientId = self.id
             request.objects.append(scenarios.get('subject'))
@@ -57,13 +57,13 @@ class Client(process):
             time.sleep(1)
             request.reqTs = int(time.time())
 
-        if len(lib.mightWriteObj(request)) !=0:
-            output("Setting request to write request")
-            request.isWriteReq = True
+            if len(lib.mightWriteObj(request)) !=0:
+                output("Setting request to write request")
+                request.isWriteReq = True
 
-        coordinatorIndex = lib.coord(lib.obj(request, 0), self.objectCoordMap)
-        output(" Application Sending message to coordinator\n")
-        send(("evalRequest",self.id, request, 0),to=coordinators[coordinatorIndex])
+            coordinatorIndex = lib.coord(lib.obj(request, 0), self.objectCoordMap)
+            output(" Application Sending message to coordinator\n")
+            send(("evalRequest",self.id, request, 0),to=coordinators[coordinatorIndex])
 
 
 
