@@ -202,6 +202,7 @@ class Coordinator(process):
     def updateCachedUpdates(obj, request):
 
         objCache = self.cachedUpdates.get(obj)
+        ## need to handle null case over here ##
         for K,V in request.updateAttributes.items():
             if objCache.get(K) is not None:
                 #objCache.get(K).add(att.Attribute(K, V, request.reqTs))
