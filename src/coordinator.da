@@ -84,6 +84,8 @@ class Coordinator(process):
                 v.pendingMightRead.add(request.reqId)
 
         output("done with latesVersionBefore update")
+        logVersionMap()
+
         request.cachedUpdates[order] = getCachedUpdates(object, request)
         output("done with cache update")
 
@@ -106,11 +108,33 @@ class Coordinator(process):
             output("Coordinator sent worker request")
 
     def getCachedUpdates(object, request):
-        if self.cachedUpdates.get(object) is None:
-            return dict()
-        return self.cachedUpdates.get(object) 
-        
+        cachedAttrs = dict()
+        if self.cachedUpdates.get(object) is not None:
+            output('found object ', object, ' in cache')
+            cachedAttrs[object] = dict()
+            attCache = self.cachedUpdates.get(object)
+            
+            for k,v in attCache.items():
+                if k in lib.defReadAttr(object, request) or k in lib.mightReadAttr(object, request):
+                    output('found attribute ', k, 'in cache')
+                    attrObj = att.Attribute()
+                    for attrib in v:
+                        if attrib.ts <= request.reqTs and attrib.ts > attrObj.ts:
+                            output('found a latestVersion of attribute', k)
+                            attrObj = attrib
 
+                    if attrObj.id is None:
+                        output('Could not found a latestVersion of attribute', k)
+                    else:
+                        #latest version of attr k
+                        cachedAttrs[object][k] = attrObj
+                else:
+                    output('attribute cache of object ', object, ' is empty')
+        else:
+            output('Could not found object ', object, ' in cache')
+            self.cachedUpdates[object] = dict()
+        return cachedAttrs            
+        
 
 
     def updateReadAttr(sender, request, order):
@@ -160,11 +184,12 @@ class Coordinator(process):
                 updateCachedUpdates(object, request)
                 logCacheUpdates()
                 output("....Updating Latest Version Before....")
-                updateLatesVersionBefore(object, request)
+                updateLatestVersionBefore(object, request)
                 logVersionMap()
 
                 for attr in lib.defReadAttr(object, request):
                     v = latestVersionBefore(object, attr, request.reqTs)
+                    output(v.__dict__)
                     v.pendingMightRead.remove(request.reqId)
                     if attr in request.readAttributes[request.updatedObj]:
                         v.rts = request.reqTs
@@ -175,7 +200,10 @@ class Coordinator(process):
                     if attr in request.readAttributes[request.updatedObj]:
                         v.rts = request.reqTs
 
-                self.writeQueue.remove(request)
+                del(self.writeQueue[request])
+                logCacheUpdates()
+                logVersionMap()
+
                 '''
                 for K,V in self.readQueue.items():
                     if request.reqId in V:
@@ -213,17 +241,9 @@ class Coordinator(process):
 
     def updateLatestVersionBefore(obj, request):
 
-
-        if self.versionMap.get(obj) is None:
-            self.versionMap[obj] = dict();
-
-        for attr in request.updateAttributes:
-
-            if self.versionMap.get(obj).get(attr) is None:
-                self.versionMap[obj][attr] = list();
-
-            self.versionMap[obj][attr].append(ver.Version(0, request.reqTs))
-
+        for attr in request.updateAttributes.keys():
+                v = latestVersionBefore(object, attr, request.reqTs)
+                v.wts = request.reqTs
 
 
     def updateDB( request):
@@ -247,7 +267,8 @@ class Coordinator(process):
    
 
     def logCacheUpdates():
-       output(self.cachedUpdates)
+       for k,v in self.cachedUpdates.items():
+           output()
     def logVersionMap():
        output(self.versionMap)
 
