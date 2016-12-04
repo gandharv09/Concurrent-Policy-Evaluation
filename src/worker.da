@@ -136,8 +136,9 @@ class Worker(process):
                             request.updatedObj = 1
                             request.decision = True
                             output("Worker evaluated decision to be True.")
-                            output("Worker sending updated write request to coordinator")
+                            output("Worker sending updated write request to coordinator ",request.workerCoordinatorId)
                             send(('updateObj', self.id,request, 1),to = request.workerCoordinatorId)
+                            output("Worker sent updated write request to coodinator")
                             return
                         else:
                             # viewCount has exhausted cant allow.

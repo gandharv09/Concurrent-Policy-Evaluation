@@ -32,6 +32,8 @@ class Coordinator(process):
             pass
         if (await(some(received(('updateObj',sender, request, order))))):
             pass
+        if (await(some(received(('restartRequest',sender, request, order))))):
+            pass
 
     def receive(msg=(str,sender, request,order)):
         if str == 'evalRequest':
@@ -49,7 +51,34 @@ class Coordinator(process):
 
 
     def restartRequest(sender, request, order):
-        pass
+        ###########################################
+        # NEED TO HANDLE READ QUEUE DEPENDENT
+        ###########################################
+        object = lib.obj(request, order)
+        for attr in lib.defReadAttr(object, request):
+                v = latestVersionBefore(object, attr, request.reqTs)
+                v.pendingMightRead.remove(request.reqId)
+
+        for attr in lib.mightReadAttr(object, request):
+            v = latestVersionBefore(object, attr, request.reqTs)
+            v.pendingMightRead.remove(request.reqId)
+
+
+        newReq = req.Request()
+        newReq.objects = request.objects
+        newReq.action = request.action
+        newReq.clientId = request.clientId
+        newReq.reqId = request.reqId
+        newReq.reqTs = int(time.time())
+        newReq.isWriteReq = request.isWriteReq
+        newReq.mightReadAttr = request.mightReadAttr
+        newReq.defReadAttr = request.defReadAttr
+        newReq.mightWriteObj = request.mightWriteObj
+        newReq.mightWriteAttr = request.mightWriteAttr
+        evaluate(newReq.clientId, newReq, order)
+        
+
+
     def evaluate(sender, request, order):
 
         output("....Evaluating Request....")
@@ -99,6 +128,7 @@ class Coordinator(process):
             self.workerNumber += 1
             output("Coordinator sending worker request")
             request.workerCoordinatorId = self.id
+            output("Setting coordinatorId to ",request.workerCoordinatorId)
             #print(self.workers)
             #print(self.workers[workerId])
             send(("workerRequest", request), to=self.workers[workerId])
@@ -222,10 +252,31 @@ class Coordinator(process):
         else:
             output("Restarting Request because of conflict")
             restart(object, request)
-
+    
+    
     def restart(obj, request):
-        pass
 
+        del(self.writeQueue[request])
+
+        ###############################################################
+        # Remove writedependcy of this write req in readwaiting Queue #
+        ###############################################################
+
+
+        for attr in lib.defReadAttr(object, request):
+                v = latestVersionBefore(object, attr, request.reqTs)
+                v.pendingMightRead.remove(request.reqId)
+
+        for attr in lib.mightReadAttr(object, request):
+            v = latestVersionBefore(object, attr, request.reqTs)
+            v.pendingMightRead.remove(request.reqId)
+
+        output("done with removing reqId from pendingMightRead")
+        coordinatorIndex = lib.coord(lib.obj(request, 0), self.objectCoordMap)
+        output("Coordinator Sending restart request to coordinator responsible for object at order 0\n")
+        send(("restartRequest",self.id, request, 0),to=coordinators[coordinatorIndex])
+
+        
     def updateCachedUpdates(obj, request):
         if self.cachedUpdates.get(obj) is None:
             self.cachedUpdates[obj] = dict()
