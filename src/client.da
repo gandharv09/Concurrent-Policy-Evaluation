@@ -55,7 +55,7 @@ class Client(process):
 
             request.reqId = random.randint(0, 1000)
             time.sleep(1)
-            request.reqTs = int(time.time())
+            #request.reqTs = int(time.time())
 
             if len(lib.mightWriteObj(request)) !=0:
                 output("Setting request to write request")

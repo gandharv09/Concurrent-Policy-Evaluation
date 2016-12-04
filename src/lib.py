@@ -42,9 +42,10 @@ def obj(request, i):
      print("In lib.obj i=",str(i))
      writeObj = mightWriteObj(request)
 
+
      if  len(writeObj) !=0:
             #  a write request.
-            if i == 1:
+            if i == 0:
                 print("------------")
                 print(request.objects[0])
                 print(request.objects[1])

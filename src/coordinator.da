@@ -83,7 +83,11 @@ class Coordinator(process):
 
         output("....Evaluating Request....")
         object = lib.obj(request, order)
-
+        if order == 0 :
+            #####################################
+            # REQUEST CAME FIRST TIME , ASSIGN TS
+            #####################################
+            request.reqTs = int(time.time())
         output("Processing object " + str(order))
 
         if request.isWriteReq is False:
