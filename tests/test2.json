@@ -12,7 +12,9 @@
 		"resource": "movieA",
 		"action": "view",
 		"mightReadAttr": "subscriptionType",
-		"defReadAttr": "viewCount"
+		"defReadAttr": "viewCount",
+        "mightWriteAttr":"viewCount",
+        "mightWriteObj":"movieA"
 		
 	}]
 }
