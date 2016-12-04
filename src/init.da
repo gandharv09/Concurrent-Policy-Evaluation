@@ -64,6 +64,10 @@ def main():
     init = new(Init)
     setup(init,())
     start(init)
+    print("asddsfdsfffrdrdrgdrg")
+    print("----------------")
+    print(sys.argv)
+    print("-----------------")
     try:
         while True:
             pass

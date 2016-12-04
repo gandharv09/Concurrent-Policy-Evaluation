@@ -116,8 +116,13 @@ class Database(process):
 
 
     def processWriteRequest(object,attribute,timeStamp,value):
+        output("Inside DB WriteRequest")
         try:
-            self.objectStore[object]['attributes'][attribute].append((timeStamp, value))
+            # this will be something like 
+            # self.objectStore['movieA']['viewCount'] = [(ts,v),(ts,v)]
+            self.objectStore[object][attribute].append((timeStamp, value))
+            output("After updating DB is ")
+            output(self.objectStore)
         except KeyError:
             output("Invalid arguments to writeRequest")
 

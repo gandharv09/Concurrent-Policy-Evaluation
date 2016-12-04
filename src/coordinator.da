@@ -18,8 +18,8 @@ class Coordinator(process):
         #output("Workers per coordinator have been setup")
         self.versionMap = dict()
         self.cachedUpdates = dict()
-        self.readQueue = list()
-        self.writeQueue = list()
+        self.readQueue = dict()
+        self.writeQueue = dict()
         self.objectCoordMap = objectCoordMap
         self.workers = list(workers)
         self.workerNumber = 0
@@ -60,14 +60,17 @@ class Coordinator(process):
         if request.isWriteReq is False:
             output("Request is of type Read-Only")
 
-            for attr in defReadAttr(object, request):
+            for attr in lib.defReadAttr(object, request):
                 #check mutable/immutable property.
                 v = latestVersionBefore(object, attr, request.reqTs)
                 v.rts = request.reqTs
 
-            for attr in mightReadAttr(object, request):
+            for attr in lib.mightReadAttr(object, request):
                 v = latestVersionBefore(object, attr, request.reqTs)
+
                 v.pendingMightRead.add(request.reqId)
+                output("------------------------------")
+                output(latestVersionBefore(object, attr, request.reqTs).pendingMightRead)
 
         else:
             output("Request is of type Write")
@@ -84,12 +87,13 @@ class Coordinator(process):
         request.cachedUpdates[order] = getCachedUpdates(object, request)
         output("done with cache update")
 
-        if order == 1:
-            coordinatorIndex = lib.coord(lib.obj(request, 2),self.objectCoordMap)
+        if order == 0:
+            output("Sending to coordinator responsible for object with order 1")
+            coordinatorIndex = lib.coord(lib.obj(request, 1),self.objectCoordMap)
             if coordinators[coordinatorIndex] == self.id:
-                evaluate(sender, request, 2)
+                evaluate(sender, request, 1)
             else:
-                send(("evalRequest", self.id, request, 2), to=coordinators[coordinatorIndex])
+                send(("evalRequest", self.id, request, 1), to=coordinators[coordinatorIndex])
 
         else:
             workerId = (self.workerNumber) % (self.numWorkers)
@@ -117,6 +121,7 @@ class Coordinator(process):
         for attr in lib.mightReadAttr(object, request):
             v = latestVersionBefore(object, attr, request.reqTs)
             v.pendingMightRead.remove(request.reqId)
+            output("REMOVED ", request.reqId)
             if attr in request.readAttributes[order]:
                 v.rts = request.reqTs
         output("....Done Updating Read Attributes....")
@@ -125,12 +130,12 @@ class Coordinator(process):
     def updateWriteAttr(sender, request, order):
 
         output("....Updating Write Attributes....")
-        object = obj(request, order)
+        object = lib.obj(request, order)
 
         self.writeQueue[request] = list()
 
         output("Checking for first conflict")
-        if checkForConflict(obj, request) is not True:
+        if checkForConflict(object, request) is not True:
             
             '''
             output("conflict not found")
@@ -153,10 +158,10 @@ class Coordinator(process):
 
                 output("....Updating Cache....")
                 updateCachedUpdates(object, request)
-
+                logCacheUpdates()
                 output("....Updating Latest Version Before....")
                 updateLatesVersionBefore(object, request)
-
+                logVersionMap()
 
                 for attr in lib.defReadAttr(object, request):
                     v = latestVersionBefore(object, attr, request.reqTs)
@@ -220,12 +225,19 @@ class Coordinator(process):
 
 
 
-    def updateDB(obj, request):
-        pass
-    def checkForConflict(obj, request):
+    def updateDB( request):
+        output("Inside coordinator updateDB")
+        object = request.objects[request.updatedObj]
+        attr = list(request.updateAttributes.keys())[0]
+        timestamp = request.reqTs
+        send(('write_request',object, attr, timestamp,request.updateAttributes[attr]),to = self.database)
 
+    def checkForConflict(obj, request):
+        output("Inside check for conflict")
         for K,V in request.updateAttributes.items():
-            v = latesVersionBefore(obj, K, request.reqTs)
+            output(K,V)
+            v = latestVersionBefore(obj, K, request.reqTs)
+            output(v.__dict__)
             if v.rts > request.reqTs:
                 return True
 
@@ -233,15 +245,24 @@ class Coordinator(process):
 
    
 
-   
+    def logCacheUpdates():
+       output(self.cachedUpdates)
+    def logVersionMap():
+       output(self.versionMap)
 
 
     def latestVersionBefore(obj, attr, ts):
 
-        latestVersion = ver.Version()
+        latestVersion = None
         if self.versionMap.get(obj) is not None:
+            output("Found entry for " , obj , " in latestVersionBefore" )
             attrMap = self.versionMap.get(obj)
+            output(attrMap)
             versionList = attrMap.get(attr)
+            if len(versionList) > 0:
+                output("vesionList for ", attr, " not empty")
+            
+            latestVersion = versionList[0]
             for version in versionList:
                 if version.wts <= ts and version.wts > latestVersion.wts:
                     latestVersion = version
@@ -251,11 +272,14 @@ class Coordinator(process):
                 latestVersion = ver.Version()
                 versionList.append(latestVersion)
         else:
+            output("Not Found entry for " , obj , " in latestVersionBefore" )
+            latestVersion = ver.Version()
             self.versionMap[obj] = dict()
             self.versionMap[obj][attr] = []
             self.versionMap[obj][attr].append(latestVersion)
-
-        return latestVersion
+            output(self.versionMap[obj])
+        if latestVersion is not None:
+            return latestVersion
 
     def cachedUpdates(object, request):
 

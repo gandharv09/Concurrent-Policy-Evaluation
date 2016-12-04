@@ -45,21 +45,25 @@ class Client(process):
                 request.defReadAttr = [ attr for attr in scenarios.get('defReadAttr').split(",")]
             if scenarios.get('mightReadAttr') is not None:
                 request.mightReadAttr = [attr for attr in scenarios.get('mightReadAttr').split(",")]
+                output("found might read attrs")
             if scenarios.get('mightWriteObj') is not None:
+                output("found mightWriteObj")
                 request.mightWriteObj = [attr for attr in scenarios.get('mightWriteObj').split(",")]
+                output(request.mightWriteObj)
             if scenarios.get('mightWriteAttr') is not None:
                 request.mightWriteAttr = [attr for attr in scenarios.get('mightWriteAttr').split(",")]
 
             request.reqId = random.randint(0, 1000)
-            
+            time.sleep(1)
             request.reqTs = int(time.time())
 
         if len(lib.mightWriteObj(request)) !=0:
+            output("Setting request to write request")
             request.isWriteReq = True
 
-        coordinatorIndex = lib.coord(lib.obj(request, 1), self.objectCoordMap)
+        coordinatorIndex = lib.coord(lib.obj(request, 0), self.objectCoordMap)
         output(" Application Sending message to coordinator\n")
-        send(("evalRequest",self.id, request, 1),to=coordinators[coordinatorIndex])
+        send(("evalRequest",self.id, request, 0),to=coordinators[coordinatorIndex])
 
 
 

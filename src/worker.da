@@ -1,5 +1,6 @@
 from xml.etree import ElementTree as ET
 import os
+import lib
 config(channel='fifo')
 class Worker(process):
 
@@ -107,85 +108,47 @@ class Worker(process):
                 request.readAttributes.append([])
                 request.readAttributes[1].append('viewCount')
                 request.updatedObj = None
+                request.decision = True
                 for i in range(2):
-                    coordIndex = lib.coord(lib.object(request,i),self.objectCoordinatorMap)
+                    coordIndex = lib.coord(lib.obj(request,i),self.objectCoordinatorMap)
                     send(('updateReadAttr', self.id, request, i), to = self.coordinatorList[coordIndex])
                 output("Worker Sending Decision to client for Read Only Request")
                 send(('evalDecision', request), to = request.clientId)
                 return 
-            if request.cachedUpdates.get(request.objects[1]) is not None:
-                currentViewCount = request.cachedUpdates.get(request.objects[1]).get('viewCount')
-                allowedViewCount = int(condition[1:])
-                if int(currentViewCount) +1 <= int(allowedViewCount):
-                    # valid , need to increment viewCount and return.
-                    request.updateAttributes['viewCount'] = currentViewCount + 1
-                    request.updatedObj = 1
-                    request.readAttributes.append('viewCount')
-                    request.decision = True
-                    sendResponseToCoordinator(request)
-                else:
-                    # view count exhausted , now need to check subscription type
-                    
-                    subscription = attrReadFromDB.get('subscriptionType')
-                    if subscription.upper() == 'PREMIUM':
-                            # premium subscription , so allow 
-                            # request.updateAttributes['viewCount'] = currentViewCount + 1
-                            request.updatedObj = None
+            
+            else:
+                    # subscription is not premium, might be a write request.
+                    if request.cachedUpdates.get(request.objects[1]) is not None:
+                        # 'viewCount' present in cache attributes of request.
+                        currentViewCount = request.cachedUpdates.get(request.objects[1]).get('viewCount')
+                    else:
+                        currentViewCount = attrReadFromDB.get(request.objects[1]).get('viewCount')
+                        currentViewCount = int(currentViewCount)
+                        allowedViewCount = int(condition[1:])
+                        if (currentViewCount + 1) <= allowedViewCount:
+                            # valid member can allow.
                             request.readAttributes.append([])
                             request.readAttributes[0].append('subscriptionType')
                             request.readAttributes.append([])
                             request.readAttributes[1].append('viewCount')
-                            #request.readAttributes.append('viewCount')
-                            request.decision = True
-                            #request.readAttributes.append('subscriptionType')
-                            for i in range(2):
-                                coordIndex = lib.coord(lib.object(request,i),self.objectCoordinatorMap)
-                         
-                                #send(('updateReadAttr', self.id, request, to = self.coordinatorList[lib.coord(lib.object(request,i)))
-                                send(('updateReadAttr', self.id, request,i), to= self.coordinatorList[coordIndex] )
-                            output("Worker sending response to client for Read only Request")
-                            send(('evalDecision', request),to = request.clientId)
-                    else:
-                        # not premium subscription.DENY !!!
-                            request.readAttributes.append('viewCount')
-                            request.decision = False
-                            request.readAttributes.append('subscriptionType')
-                            sendResponseToCoordinator(request)
-            else:
-                # viewCount not cached, need to query db
-                currentViewCount = attrReadFromDB.get(request.objects[1]).get('viewCount')
-                if currentViewCount is None:
-                    output("ERROR: attribue not found in the database")
-                    request.decision = False
-                    return sendResponseToCoordinator(coordinator)
-                     
-                else:
-                    # found a valid viewCount in the db
-                    allowedViewCount = int(condition[1:])
-                    if int(currentViewCount) +1 <= int(allowedViewCount):
-                        # valid , need to increment viewCount and return.
-                        request.updateAttributes['viewCount'] = str(int(currentViewCount) + 1)
-                        request.updatedObj = 1
-                        request.readAttributes.append('viewCount')
-                        request.decision = True
-                        output("Decision is True")
-                        output("Sending decision back to coordinator")
-                        return sendResponseToCoordinator(request)
-                    else:
-                        # viewCount exhausted, check for subscription type 
-                        subscription = attrReadFromDB.get(request.objects[0]).get('subscriptionType')
-                        if subscription.upper() == 'PREMIUM':
-                            # premium subscription , so allow 
-                            request.updateAttributes['viewCount'] = currentViewCount + 1
+                            request.updateAttributes['viewCount'] = int(currentViewCount) +1
                             request.updatedObj = 1
-                            request.readAttributes.append('viewCount')
                             request.decision = True
-                            request.readAttributes.append('subscriptionType')
+                            output("Worker evaluated decision to be True.")
+                            output("Worker sending updated write request to coordinator")
+                            send(('updateObj', self.id,request, 1),to = request.workerCoordinatorId)
+                            return
                         else:
-                            # not premium subscription.DENY !!!
-                            request.readAttributes.append('viewCount')
+                            # viewCount has exhausted cant allow.
+                            request.readAttributes.append([])
+                            request.readAttributes[0].append('subscriptionType')
+                            request.readAttributes.append([])
+                            request.readAttributes[1].append('viewCount')
                             request.decision = False
-                            request.readAttributes.append('subscriptionType')
-                            output("Decision is False")
-                            return sendResponseToCoordinator(request)
-
+                            request.updatedObj = None
+                            output("Worker evaluated decision to be False.")
+                            output("Worker sending updated write request to coordinator")
+                            send(('updateObj',self.id, request ,1), to = request.workerCoordinatorId)
+                            return
+                   
+                        
