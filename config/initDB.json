@@ -3,13 +3,13 @@
 		"name": "customerA",
 		"attributes":{
             "name": "subscriptionType",
-            "value": "premium"
+            "value": "basic"
         }
     }, {
         "name": "movieA",
         "attributes":{
           "name": "viewCount",
-          "value": "5"
+          "value": "2"
         }
     }, {
 		"name": "customerB",
