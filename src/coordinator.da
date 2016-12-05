@@ -48,7 +48,21 @@ class Coordinator(process):
         elif str == 'restartRequest':
             output("Received restartRequest from coordinator")
             restartRequest(sender, request, order)
-
+    
+    def checkForAttrConflict(request):
+        for k,v in self.writeQueue.items():
+             updatedAttr = k.updateAttributes.keys()
+             for obj in request.objects:
+                 mightReadAttr = lib.mightReadAttr(obj, request)
+                 if set(mightReadAttr).intersection(set(updatedAttr)) is not None:
+                     output("This read request conflicting attributes")
+                     if self.readQueue.get(request) is None:
+                         self.readQueue[request] = list()
+                         self.readQueue[request].append(k.reqId)
+                     else:
+                         self.readQueue.append(k.reqId)
+                     return True
+        return False    
 
     def restartRequest(sender, request, order):
         ###########################################
@@ -82,7 +96,15 @@ class Coordinator(process):
     def evaluate(sender, request, order):
 
         output("....Evaluating Request....")
+        '''
+        if request.isWriteReq is False:
+            output("Checking for conflicting attributes for read request")
+            if checkForAttrConflict(request):
+                output("Suspending read request due to conflicting attributes")
+                return
+        ''' 
         object = lib.obj(request, order)
+
         if order == 0 :
             #####################################
             # REQUEST CAME FIRST TIME , ASSIGN TS
@@ -94,7 +116,7 @@ class Coordinator(process):
             output("Request is of type Read-Only")
 
             for attr in lib.defReadAttr(object, request):
-                #check mutable/immutable property.
+                
                 v = latestVersionBefore(object, attr, request.reqTs)
                 v.rts = request.reqTs
 
@@ -133,8 +155,7 @@ class Coordinator(process):
             output("Coordinator sending worker request")
             request.workerCoordinatorId = self.id
             output("Setting coordinatorId to ",request.workerCoordinatorId)
-            #print(self.workers)
-            #print(self.workers[workerId])
+            
             send(("workerRequest", request), to=self.workers[workerId])
             output("Coordinator sent worker request")
 
@@ -168,7 +189,7 @@ class Coordinator(process):
 
 
     def updateReadAttr(sender, request, order):
-
+        #time.sleep(3)
         output("....Updating Read Attributes....")
         object = lib.obj(request, order)
 
@@ -180,6 +201,18 @@ class Coordinator(process):
                 v.rts = request.reqTs
         output("....Done Updating Read Attributes....")
 
+        wReq = None
+        for k,v in self.writeQueue.items():
+            if request.reqId in v :
+                output("Found read onnly request in write queue.Removing entry.")
+                v.remove(request.reqId)
+                if len(v) == 0:
+                    wReq = k
+                    output("Taking out write request from waiting queue, and continuing execution")
+                    send(('updateObj', self.id,wReq, 1),to = request.workerCoordinatorId)
+        if wReq:
+            del(self.writeQueue[wReq])
+            #### need to implement for write and send to handler for updateWriteAttr ###
 
     def updateWriteAttr(sender, request, order):
 
@@ -191,17 +224,18 @@ class Coordinator(process):
         output("Checking for first conflict")
         if checkForConflict(object, request) is not True:
             
-            '''
+            
             output("conflict not found")
             for K,V in request.updateAttributes.items():
                 pendingList = latestVersionBefore(object, K, request.reqTs).pendingMightRead
-                if len(pendingList) > 1 or (len(pendingList) == 1 and pendingList[0] != request.reqId):
+                output("PENDING LIST", pendingList)
+                if len(pendingList) > 1 or (len(pendingList) == 1 and list(pendingList)[0] != request.reqId):
                     for reqId in pendingList:
                         if reqId != request.reqId:
                             output("adding conflicting read requests to write waiting queue and going to wait")
-                            self.writeQueue.get(request).add(reqId)
+                            self.writeQueue[request].append(reqId)
                             return 
-            '''               
+                           
 
             output("Checking for second conflict")
             if checkForConflict(object, request) is not True:
@@ -242,9 +276,11 @@ class Coordinator(process):
                     if request.reqId in V:
                         V.remove(request.reqId)
                         if len(V) == 0:
-                            self.readQueue.remove(K)
-                            coordinatorIndex = coord(obj(request, 1))
-                            send(("evalRequest", self.id, request, 1), to = coordinators[coordinatorIndex])
+                            #self.readQueue.remove(K)
+                            del(self.readQueue[K])
+                            # below  two lines should be 0 instead of 1 i think 
+                            coordinatorIndex = lib.coord(lib.obj(request, 1),self.objectCoordMap)
+                            send(("evalRequest", self.id, K, 1), to = coordinators[coordinatorIndex])
                 
                 '''
 
@@ -291,7 +327,7 @@ class Coordinator(process):
         for K,V in request.updateAttributes.items():
             if objCache.get(K) is not None:
                 #objCache.get(K).add(att.Attribute(K, V, request.reqTs))
-                objCache[k].append(att.Attribute(K, V, request.reqTs))
+                objCache[K].append(att.Attribute(K, V, request.reqTs))
             else:
                 objCache[K] = list()
                 objCache[K].append(att.Attribute(K, V, request.reqTs))
