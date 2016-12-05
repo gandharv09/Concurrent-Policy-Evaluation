@@ -3,11 +3,19 @@
 		"numCoordinators": "10",
 		"numWorkerPerCoordinator": "3",
 		"minDBLatency": "3",
-		"maxDBLatency": "5"
+		"maxDBLatency": "5",
+		"comment":"tc2 according to project,  sleep required in PREMIUM worker, Read followed by write"
 	},
 
 
 	"scenarios": [{
+		"subject": "customerB",
+		"resource": "movieA",
+		"action": "view",
+		"mightReadAttr": "viewCount",
+		"defReadAttr": "subscriptionType"
+        
+	},{
 		"subject": "customerA",
 		"resource": "movieA",
 		"action": "view",

@@ -3,7 +3,8 @@
 		"numCoordinators": "10",
 		"numWorkerPerCoordinator": "3",
 		"minDBLatency": "3",
-		"maxDBLatency": "5"
+		"maxDBLatency": "5",
+		"comment":"tc 3 according to project.txt ,Write followed Read, sleep required in worker "
 	},
 
 

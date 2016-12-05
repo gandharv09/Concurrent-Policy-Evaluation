@@ -55,7 +55,7 @@ class Coordinator(process):
              for obj in request.objects:
                  mightReadAttr = lib.mightReadAttr(obj, request)
                  if set(mightReadAttr).intersection(set(updatedAttr)) is not None:
-                     output("This read request conflicting attributes")
+                     output("This read request contains conflicting attributes")
                      if self.readQueue.get(request) is None:
                          self.readQueue[request] = list()
                          self.readQueue[request].append(k.reqId)
@@ -96,13 +96,13 @@ class Coordinator(process):
     def evaluate(sender, request, order):
 
         output("....Evaluating Request....")
-        '''
+        
         if request.isWriteReq is False:
             output("Checking for conflicting attributes for read request")
             if checkForAttrConflict(request):
                 output("Suspending read request due to conflicting attributes")
                 return
-        ''' 
+         
         object = lib.obj(request, order)
 
         if order == 0 :
@@ -113,6 +113,7 @@ class Coordinator(process):
         output("Processing object " + str(order))
 
         if request.isWriteReq is False:
+            
             output("Request is of type Read-Only")
 
             for attr in lib.defReadAttr(object, request):
@@ -189,7 +190,7 @@ class Coordinator(process):
 
 
     def updateReadAttr(sender, request, order):
-        #time.sleep(3)
+       
         output("....Updating Read Attributes....")
         object = lib.obj(request, order)
 
@@ -271,20 +272,18 @@ class Coordinator(process):
                 logCacheUpdates()
                 logVersionMap()
 
-                '''
+                rReq = None
                 for K,V in self.readQueue.items():
                     if request.reqId in V:
                         V.remove(request.reqId)
                         if len(V) == 0:
                             #self.readQueue.remove(K)
-                            del(self.readQueue[K])
-                            # below  two lines should be 0 instead of 1 i think 
-                            coordinatorIndex = lib.coord(lib.obj(request, 1),self.objectCoordMap)
-                            send(("evalRequest", self.id, K, 1), to = coordinators[coordinatorIndex])
-                
-                '''
-
-
+                            rReq = K       
+                            output("Restarting read Request at very start blocked by write request", rReq.reqId)
+                            coordinatorIndex = lib.coord(lib.obj(request, 0),self.objectCoordMap)
+                            send(("evalRequest", self.id, K, 0), to = coordinators[coordinatorIndex])
+                if rReq:
+                    del(self.readQueue[rReq])
 
             else:
                 output("Restarting Request because of conflict")
