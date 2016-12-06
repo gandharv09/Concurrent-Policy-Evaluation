@@ -4,6 +4,7 @@
 		"numWorkerPerCoordinator": "3",
 		"minDBLatency": "3",
 		"maxDBLatency": "5",
+		"tcId":"2",
 		"comment":"tc2 according to project,  sleep required in PREMIUM worker, Read followed by write"
 	},
 

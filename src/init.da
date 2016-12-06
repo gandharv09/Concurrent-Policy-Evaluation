@@ -11,7 +11,7 @@ except ImportError:
 class Init(process):
     def setup():
         pass
-    def initProcesses(numCoordinator, numWorkerPerCoordinator):
+    def initProcesses(numCoordinator, numWorkerPerCoordinator,tcId):
         try:
             coordinators=new(coordinator.Coordinator,num = numCoordinator )
 
@@ -33,7 +33,7 @@ class Init(process):
             setup(db,args)
             output("DbEmulator process set up")
            
-            setup(coordinators, (numWorkerPerCoordinator, list(coordinators), db, objectCoordMap))
+            setup(coordinators, (numWorkerPerCoordinator, list(coordinators), db, objectCoordMap,tcId))
             output("Coordinators have been setup")
             
             setup(clients, (list(coordinators), sys.argv[2], objectCoordMap))
@@ -58,7 +58,8 @@ class Init(process):
             configData=json.loads(open(sys.argv[2]).read())
             numCoordinator=configData.get('globalConfig').get('numCoordinators')
             numWorkerPerCoordinator = configData.get('globalConfig').get('numWorkerPerCoordinator')
-            if initProcesses(int(numCoordinator),int(numWorkerPerCoordinator)):
+            tcId = configData.get('globalConfig').get('tcId')
+            if initProcesses(int(numCoordinator),int(numWorkerPerCoordinator),int(tcId)):
                 output("Failed to setup the environment")
                 sys.exit(-1)
 

@@ -1,0 +1,558 @@
+[2016-12-05 18:04:25,537]da.api:INFO: Running iteration 1 ...
+[2016-12-05 18:04:25,538]runtime.UdpEndPoint(localhost_34256):DEBUG: UdpEndPoint ('localhost', 34256) initialization complete
+[2016-12-05 18:04:25,551]da.api:DEBUG: Current process is ('localhost', 34256)
+[2016-12-05 18:04:25,551]da.api:DEBUG: Creating 1 instances of <class 'init.Init'>..
+[2016-12-05 18:04:25,555]da.api:DEBUG: 1 instances of Init created.
+[2016-12-05 18:04:25,556]runtime.UdpEndPoint(localhost_35618):DEBUG: UdpEndPoint ('localhost', 35618) initialization complete
+[2016-12-05 18:04:25,558]Init[('localhost', 35618)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,559]da.api:DEBUG: Starting ('localhost', 35618)...
+[2016-12-05 18:04:25,563]Init[('localhost', 35618)]:DEBUG: Running setup..
+[2016-12-05 18:04:25,563]Init[('localhost', 35618)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:25,847]da.api:DEBUG: Current process is ('localhost', 35618)
+[2016-12-05 18:04:25,847]da.api:DEBUG: Creating 10 instances of <class 'coordinator.Coordinator'>..
+[2016-12-05 18:04:25,851]runtime.UdpEndPoint(localhost_39136):DEBUG: UdpEndPoint ('localhost', 39136) initialization complete
+[2016-12-05 18:04:25,853]runtime.UdpEndPoint(localhost_12319):DEBUG: UdpEndPoint ('localhost', 12319) initialization complete
+[2016-12-05 18:04:25,854]Coordinator[('localhost', 39136)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,855]Coordinator[('localhost', 12319)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,855]runtime.UdpEndPoint(localhost_10353):DEBUG: UdpEndPoint ('localhost', 10353) initialization complete
+[2016-12-05 18:04:25,861]Coordinator[('localhost', 10353)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,864]runtime.UdpEndPoint(localhost_14381):DEBUG: UdpEndPoint ('localhost', 14381) initialization complete
+[2016-12-05 18:04:25,865]runtime.UdpEndPoint(localhost_14098):DEBUG: UdpEndPoint ('localhost', 14098) initialization complete
+[2016-12-05 18:04:25,860]runtime.UdpEndPoint(localhost_21260):DEBUG: UdpEndPoint ('localhost', 21260) initialization complete
+[2016-12-05 18:04:25,867]Coordinator[('localhost', 14098)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,866]da.api:DEBUG: 10 instances of Coordinator created.
+[2016-12-05 18:04:25,867]Coordinator[('localhost', 21260)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,869]Coordinator[('localhost', 14381)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,870]runtime.UdpEndPoint(localhost_29702):DEBUG: UdpEndPoint ('localhost', 29702) initialization complete
+[2016-12-05 18:04:25,871]Coordinator[('localhost', 29702)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,872]runtime.UdpEndPoint(localhost_13745):DEBUG: UdpEndPoint ('localhost', 13745) initialization complete
+[2016-12-05 18:04:25,873]Coordinator[('localhost', 13745)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,875]runtime.UdpEndPoint(localhost_26153):DEBUG: UdpEndPoint ('localhost', 26153) initialization complete
+[2016-12-05 18:04:25,876]runtime.UdpEndPoint(localhost_30689):DEBUG: UdpEndPoint ('localhost', 30689) initialization complete
+[2016-12-05 18:04:25,877]Coordinator[('localhost', 26153)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,878]Coordinator[('localhost', 30689)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,879]da.api:DEBUG: Current process is ('localhost', 35618)
+[2016-12-05 18:04:25,879]da.api:DEBUG: Creating 1 instances of <class 'client.Client'>..
+[2016-12-05 18:04:25,881]da.api:DEBUG: 1 instances of Client created.
+[2016-12-05 18:04:25,883]runtime.UdpEndPoint(localhost_21872):DEBUG: UdpEndPoint ('localhost', 21872) initialization complete
+[2016-12-05 18:04:25,884]Client[('localhost', 21872)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,885]da.api:DEBUG: Current process is ('localhost', 35618)
+[2016-12-05 18:04:25,885]da.api:DEBUG: Creating 1 instances of <class 'database.Database'>..
+[2016-12-05 18:04:25,887]da.api:DEBUG: 1 instances of Database created.
+[2016-12-05 18:04:25,892]runtime.UdpEndPoint(localhost_11950):DEBUG: UdpEndPoint ('localhost', 11950) initialization complete
+[2016-12-05 18:04:25,895]Database[('localhost', 11950)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,897]Database[('localhost', 11950)]:DEBUG: Running setup..
+[2016-12-05 18:04:25,897]Init[('localhost', 35618)]:INFO: DbEmulator process set up
+[2016-12-05 18:04:25,898]Coordinator[('localhost', 21260)]:DEBUG: Running setup..
+[2016-12-05 18:04:25,899]da.api:DEBUG: Current process is ('localhost', 21260)
+[2016-12-05 18:04:25,899]da.api:DEBUG: Creating 3 instances of <class 'worker.Worker'>..
+[2016-12-05 18:04:25,899]Coordinator[('localhost', 39136)]:DEBUG: Running setup..
+[2016-12-05 18:04:25,900]da.api:DEBUG: Current process is ('localhost', 39136)
+[2016-12-05 18:04:25,900]da.api:DEBUG: Creating 3 instances of <class 'worker.Worker'>..
+[2016-12-05 18:04:25,901]Coordinator[('localhost', 14381)]:DEBUG: Running setup..
+[2016-12-05 18:04:25,901]da.api:DEBUG: Current process is ('localhost', 14381)
+[2016-12-05 18:04:25,902]da.api:DEBUG: Creating 3 instances of <class 'worker.Worker'>..
+[2016-12-05 18:04:25,904]Database[('localhost', 11950)]:INFO: Database started with config file  ../config/initDB.json
+[2016-12-05 18:04:25,904]runtime.UdpEndPoint(localhost_13525):DEBUG: UdpEndPoint ('localhost', 13525) initialization complete
+[2016-12-05 18:04:25,905]Coordinator[('localhost', 13745)]:DEBUG: Running setup..
+[2016-12-05 18:04:25,906]Coordinator[('localhost', 26153)]:DEBUG: Running setup..
+[2016-12-05 18:04:25,906]Coordinator[('localhost', 12319)]:DEBUG: Running setup..
+[2016-12-05 18:04:25,907]da.api:DEBUG: Current process is ('localhost', 13745)
+[2016-12-05 18:04:25,907]da.api:DEBUG: Current process is ('localhost', 26153)
+[2016-12-05 18:04:25,907]da.api:DEBUG: Creating 3 instances of <class 'worker.Worker'>..
+[2016-12-05 18:04:25,907]da.api:DEBUG: Creating 3 instances of <class 'worker.Worker'>..
+[2016-12-05 18:04:25,907]da.api:DEBUG: Current process is ('localhost', 12319)
+[2016-12-05 18:04:25,907]da.api:DEBUG: Creating 3 instances of <class 'worker.Worker'>..
+[2016-12-05 18:04:25,909]Coordinator[('localhost', 30689)]:DEBUG: Running setup..
+[2016-12-05 18:04:25,906]Coordinator[('localhost', 14098)]:DEBUG: Running setup..
+[2016-12-05 18:04:25,909]da.api:DEBUG: Current process is ('localhost', 30689)
+[2016-12-05 18:04:25,910]da.api:DEBUG: Creating 3 instances of <class 'worker.Worker'>..
+[2016-12-05 18:04:25,910]da.api:DEBUG: Current process is ('localhost', 14098)
+[2016-12-05 18:04:25,910]da.api:DEBUG: Creating 3 instances of <class 'worker.Worker'>..
+[2016-12-05 18:04:25,913]Coordinator[('localhost', 10353)]:DEBUG: Running setup..
+[2016-12-05 18:04:25,914]da.api:DEBUG: Current process is ('localhost', 10353)
+[2016-12-05 18:04:25,914]da.api:DEBUG: Creating 3 instances of <class 'worker.Worker'>..
+[2016-12-05 18:04:25,915]runtime.UdpEndPoint(localhost_16179):DEBUG: UdpEndPoint ('localhost', 16179) initialization complete
+[2016-12-05 18:04:25,917]Coordinator[('localhost', 29702)]:DEBUG: Running setup..
+[2016-12-05 18:04:25,917]da.api:DEBUG: Current process is ('localhost', 29702)
+[2016-12-05 18:04:25,918]da.api:DEBUG: Creating 3 instances of <class 'worker.Worker'>..
+[2016-12-05 18:04:25,919]runtime.UdpEndPoint(localhost_20663):DEBUG: UdpEndPoint ('localhost', 20663) initialization complete
+[2016-12-05 18:04:25,920]da.api:DEBUG: 3 instances of Worker created.
+[2016-12-05 18:04:25,916]Database[('localhost', 11950)]:INFO: After Initial load db is
+
+[2016-12-05 18:04:25,922]runtime.UdpEndPoint(localhost_11817):DEBUG: UdpEndPoint ('localhost', 11817) initialization complete
+[2016-12-05 18:04:25,922]Database[('localhost', 11950)]:INFO: {'customerA': {'subscriptionType': [(1480989865, 'basic')]}, 'movieA': {'viewCount': [(1480989865, '2')]}, 'customerB': {'subscriptionType': [(1480989865, 'premium')]}}
+[2016-12-05 18:04:25,930]da.api:DEBUG: 3 instances of Worker created.
+[2016-12-05 18:04:25,906]Init[('localhost', 35618)]:INFO: Coordinators have been setup
+[2016-12-05 18:04:25,931]da.api:DEBUG: 3 instances of Worker created.
+[2016-12-05 18:04:25,931]Client[('localhost', 21872)]:DEBUG: Running setup..
+[2016-12-05 18:04:25,931]Init[('localhost', 35618)]:INFO: Client process has been set up
+[2016-12-05 18:04:25,932]Client[('localhost', 21872)]:INFO: Client setup with config file ../tests/test3.json
+[2016-12-05 18:04:25,932]runtime.UdpEndPoint(localhost_18626):DEBUG: UdpEndPoint ('localhost', 18626) initialization complete
+[2016-12-05 18:04:25,932]da.api:DEBUG: Starting ('localhost', 21872)...
+[2016-12-05 18:04:25,932]Client[('localhost', 21872)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:25,932]da.api:DEBUG: Starting {<Coordinator('localhost', 21260)>, <Coordinator('localhost', 14381)>, <Coordinator('localhost', 10353)>, <Coordinator('localhost', 13745)>, <Coordinator('localhost', 14098)>, <Coordinator('localhost', 29702)>, <Coordinator('localhost', 26153)>, <Coordinator('localhost', 39136)>, <Coordinator('localhost', 30689)>, <Coordinator('localhost', 12319)>}...
+[2016-12-05 18:04:25,932]da.api:DEBUG: 3 instances of Worker created.
+[2016-12-05 18:04:25,933]Client[('localhost', 21872)]:INFO: Sending Request at index :  0
+[2016-12-05 18:04:25,933]Client[('localhost', 21872)]:INFO: found might read attrs
+[2016-12-05 18:04:25,933]Client[('localhost', 21872)]:INFO: found mightWriteObj
+[2016-12-05 18:04:25,933]Client[('localhost', 21872)]:INFO: ['movieA']
+[2016-12-05 18:04:25,935]runtime.UdpEndPoint(localhost_16617):DEBUG: UdpEndPoint ('localhost', 16617) initialization complete
+[2016-12-05 18:04:25,935]da.api:DEBUG: 3 instances of Worker created.
+[2016-12-05 18:04:25,936]da.api:DEBUG: Starting ('localhost', 11950)...
+[2016-12-05 18:04:25,936]runtime.UdpEndPoint(localhost_14666):DEBUG: UdpEndPoint ('localhost', 14666) initialization complete
+[2016-12-05 18:04:25,937]Init[('localhost', 35618)]:INFO: Started all processes
+[2016-12-05 18:04:25,939]da.api:DEBUG: 3 instances of Worker created.
+[2016-12-05 18:04:25,939]runtime.UdpEndPoint(localhost_38907):DEBUG: UdpEndPoint ('localhost', 38907) initialization complete
+[2016-12-05 18:04:25,942]da.api:DEBUG: 3 instances of Worker created.
+[2016-12-05 18:04:25,943]runtime.UdpEndPoint(localhost_22915):DEBUG: UdpEndPoint ('localhost', 22915) initialization complete
+[2016-12-05 18:04:25,943]runtime.UdpEndPoint(localhost_28250):DEBUG: UdpEndPoint ('localhost', 28250) initialization complete
+[2016-12-05 18:04:25,944]Worker[('localhost', 13525)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,945]runtime.UdpEndPoint(localhost_39220):DEBUG: UdpEndPoint ('localhost', 39220) initialization complete
+[2016-12-05 18:04:25,946]Database[('localhost', 11950)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:25,946]Worker[('localhost', 20663)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,926]runtime.UdpEndPoint(localhost_26300):DEBUG: UdpEndPoint ('localhost', 26300) initialization complete
+[2016-12-05 18:04:25,946]da.api:DEBUG: 3 instances of Worker created.
+[2016-12-05 18:04:25,929]da.api:DEBUG: 3 instances of Worker created.
+[2016-12-05 18:04:25,947]runtime.UdpEndPoint(localhost_29755):DEBUG: UdpEndPoint ('localhost', 29755) initialization complete
+[2016-12-05 18:04:25,948]Worker[('localhost', 11817)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,948]da.api:DEBUG: 3 instances of Worker created.
+[2016-12-05 18:04:25,949]Worker[('localhost', 18626)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,949]Worker[('localhost', 16617)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,951]runtime.UdpEndPoint(localhost_22519):DEBUG: UdpEndPoint ('localhost', 22519) initialization complete
+[2016-12-05 18:04:25,951]runtime.UdpEndPoint(localhost_21392):DEBUG: UdpEndPoint ('localhost', 21392) initialization complete
+[2016-12-05 18:04:25,953]Worker[('localhost', 39220)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,954]Worker[('localhost', 26300)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,955]Worker[('localhost', 28250)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,955]runtime.UdpEndPoint(localhost_25006):DEBUG: UdpEndPoint ('localhost', 25006) initialization complete
+[2016-12-05 18:04:25,955]runtime.UdpEndPoint(localhost_17887):DEBUG: UdpEndPoint ('localhost', 17887) initialization complete
+[2016-12-05 18:04:25,957]Worker[('localhost', 17887)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,960]runtime.UdpEndPoint(localhost_33660):DEBUG: UdpEndPoint ('localhost', 33660) initialization complete
+[2016-12-05 18:04:25,960]runtime.UdpEndPoint(localhost_36022):DEBUG: UdpEndPoint ('localhost', 36022) initialization complete
+[2016-12-05 18:04:25,961]Worker[('localhost', 29755)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,961]runtime.UdpEndPoint(localhost_14606):DEBUG: UdpEndPoint ('localhost', 14606) initialization complete
+[2016-12-05 18:04:25,962]Worker[('localhost', 38907)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,962]Worker[('localhost', 22519)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,968]Worker[('localhost', 11817)]:DEBUG: Running setup..
+[2016-12-05 18:04:25,968]da.api:DEBUG: Starting {<Worker('localhost', 11817)>, <Worker('localhost', 39220)>, <Worker('localhost', 22519)>}...
+[2016-12-05 18:04:25,968]Worker[('localhost', 39220)]:DEBUG: Running setup..
+[2016-12-05 18:04:25,968]Coordinator[('localhost', 30689)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:25,968]Worker[('localhost', 39220)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:25,969]Worker[('localhost', 11817)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:25,969]Worker[('localhost', 22915)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,970]Worker[('localhost', 16179)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,970]Worker[('localhost', 22519)]:DEBUG: Running setup..
+[2016-12-05 18:04:25,970]Worker[('localhost', 22519)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:25,971]Worker[('localhost', 14666)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,972]Worker[('localhost', 16179)]:DEBUG: Running setup..
+[2016-12-05 18:04:25,972]da.api:DEBUG: Starting {<Worker('localhost', 14666)>, <Worker('localhost', 16179)>, <Worker('localhost', 38907)>}...
+[2016-12-05 18:04:25,972]Coordinator[('localhost', 14381)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:25,973]runtime.UdpEndPoint(localhost_12954):DEBUG: UdpEndPoint ('localhost', 12954) initialization complete
+[2016-12-05 18:04:25,973]Worker[('localhost', 38907)]:DEBUG: Running setup..
+[2016-12-05 18:04:25,974]Worker[('localhost', 38907)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:25,974]Worker[('localhost', 14666)]:DEBUG: Running setup..
+[2016-12-05 18:04:25,975]Worker[('localhost', 14666)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:25,975]runtime.UdpEndPoint(localhost_19210):DEBUG: UdpEndPoint ('localhost', 19210) initialization complete
+[2016-12-05 18:04:25,975]Worker[('localhost', 25006)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,976]runtime.UdpEndPoint(localhost_36093):DEBUG: UdpEndPoint ('localhost', 36093) initialization complete
+[2016-12-05 18:04:25,977]Worker[('localhost', 36022)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,977]Worker[('localhost', 16179)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:25,978]Worker[('localhost', 12954)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,978]Worker[('localhost', 19210)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,980]da.api:DEBUG: Starting {<Worker('localhost', 28250)>, <Worker('localhost', 13525)>, <Worker('localhost', 19210)>}...
+[2016-12-05 18:04:25,980]Coordinator[('localhost', 21260)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:25,981]Worker[('localhost', 28250)]:DEBUG: Running setup..
+[2016-12-05 18:04:25,981]Worker[('localhost', 28250)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:25,981]Worker[('localhost', 13525)]:DEBUG: Running setup..
+[2016-12-05 18:04:25,981]Worker[('localhost', 13525)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:25,981]Worker[('localhost', 36093)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,982]Worker[('localhost', 19210)]:DEBUG: Running setup..
+[2016-12-05 18:04:25,982]Worker[('localhost', 19210)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:25,982]runtime.UdpEndPoint(localhost_12090):DEBUG: UdpEndPoint ('localhost', 12090) initialization complete
+[2016-12-05 18:04:25,983]da.api:DEBUG: Starting {<Worker('localhost', 36093)>, <Worker('localhost', 36022)>, <Worker('localhost', 26300)>}...
+[2016-12-05 18:04:25,983]runtime.UdpEndPoint(localhost_24321):DEBUG: UdpEndPoint ('localhost', 24321) initialization complete
+[2016-12-05 18:04:25,984]Coordinator[('localhost', 13745)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:25,984]Worker[('localhost', 36093)]:DEBUG: Running setup..
+[2016-12-05 18:04:25,984]Worker[('localhost', 36093)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:25,985]Worker[('localhost', 24321)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,985]Worker[('localhost', 36022)]:DEBUG: Running setup..
+[2016-12-05 18:04:25,985]Worker[('localhost', 36022)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:25,985]Worker[('localhost', 26300)]:DEBUG: Running setup..
+[2016-12-05 18:04:25,986]Worker[('localhost', 26300)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:25,986]Worker[('localhost', 33660)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,986]runtime.UdpEndPoint(localhost_19578):DEBUG: UdpEndPoint ('localhost', 19578) initialization complete
+[2016-12-05 18:04:25,987]Worker[('localhost', 24321)]:DEBUG: Running setup..
+[2016-12-05 18:04:25,987]da.api:DEBUG: Starting {<Worker('localhost', 18626)>, <Worker('localhost', 16617)>, <Worker('localhost', 33660)>}...
+[2016-12-05 18:04:25,987]Worker[('localhost', 21392)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,987]da.api:DEBUG: Starting {<Worker('localhost', 12954)>, <Worker('localhost', 29755)>, <Worker('localhost', 24321)>}...
+[2016-12-05 18:04:25,987]Coordinator[('localhost', 39136)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:25,954]runtime.UdpEndPoint(localhost_26967):DEBUG: UdpEndPoint ('localhost', 26967) initialization complete
+[2016-12-05 18:04:25,988]Worker[('localhost', 18626)]:DEBUG: Running setup..
+[2016-12-05 18:04:25,988]Worker[('localhost', 18626)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:25,988]Worker[('localhost', 24321)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:25,988]Worker[('localhost', 16617)]:DEBUG: Running setup..
+[2016-12-05 18:04:25,984]runtime.UdpEndPoint(localhost_36473):DEBUG: UdpEndPoint ('localhost', 36473) initialization complete
+[2016-12-05 18:04:25,988]Coordinator[('localhost', 12319)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:25,988]Worker[('localhost', 16617)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:25,989]Worker[('localhost', 29755)]:DEBUG: Running setup..
+[2016-12-05 18:04:25,989]Worker[('localhost', 12090)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,989]Worker[('localhost', 29755)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:25,990]Worker[('localhost', 14606)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,990]Worker[('localhost', 22915)]:DEBUG: Running setup..
+[2016-12-05 18:04:25,990]Worker[('localhost', 36473)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,990]da.api:DEBUG: Starting {<Worker('localhost', 21392)>, <Worker('localhost', 22915)>, <Worker('localhost', 20663)>}...
+[2016-12-05 18:04:25,992]Worker[('localhost', 22915)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:25,992]Coordinator[('localhost', 14098)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:25,993]da.api:DEBUG: Starting {<Worker('localhost', 12090)>, <Worker('localhost', 14606)>, <Worker('localhost', 17887)>}...
+[2016-12-05 18:04:25,994]Worker[('localhost', 20663)]:DEBUG: Running setup..
+[2016-12-05 18:04:25,996]Coordinator[('localhost', 29702)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:25,996]Worker[('localhost', 20663)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:25,995]Worker[('localhost', 17887)]:DEBUG: Running setup..
+[2016-12-05 18:04:25,995]Worker[('localhost', 12954)]:DEBUG: Running setup..
+[2016-12-05 18:04:25,981]runtime.UdpEndPoint(localhost_34915):DEBUG: UdpEndPoint ('localhost', 34915) initialization complete
+[2016-12-05 18:04:25,998]Worker[('localhost', 12954)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:25,998]Worker[('localhost', 17887)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:25,996]Worker[('localhost', 33660)]:DEBUG: Running setup..
+[2016-12-05 18:04:25,998]Worker[('localhost', 26967)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:25,999]Worker[('localhost', 33660)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:25,999]Worker[('localhost', 14606)]:DEBUG: Running setup..
+[2016-12-05 18:04:26,001]Worker[('localhost', 14606)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:26,001]Worker[('localhost', 21392)]:DEBUG: Running setup..
+[2016-12-05 18:04:26,002]Worker[('localhost', 21392)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:26,002]Worker[('localhost', 12090)]:DEBUG: Running setup..
+[2016-12-05 18:04:26,002]Worker[('localhost', 12090)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:26,002]Worker[('localhost', 34915)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:26,002]runtime.UdpEndPoint(localhost_19551):DEBUG: UdpEndPoint ('localhost', 19551) initialization complete
+[2016-12-05 18:04:26,003]Worker[('localhost', 25006)]:DEBUG: Running setup..
+[2016-12-05 18:04:26,003]da.api:DEBUG: Starting {<Worker('localhost', 34915)>, <Worker('localhost', 25006)>, <Worker('localhost', 26967)>}...
+[2016-12-05 18:04:26,004]Worker[('localhost', 25006)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:26,004]Coordinator[('localhost', 10353)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:26,004]Worker[('localhost', 26967)]:DEBUG: Running setup..
+[2016-12-05 18:04:26,004]Worker[('localhost', 26967)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:26,005]Worker[('localhost', 19551)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:26,005]Worker[('localhost', 34915)]:DEBUG: Running setup..
+[2016-12-05 18:04:26,006]Worker[('localhost', 34915)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:26,006]Worker[('localhost', 19578)]:DEBUG: Sending id to parent...
+[2016-12-05 18:04:26,007]da.api:DEBUG: Starting {<Worker('localhost', 19578)>, <Worker('localhost', 36473)>, <Worker('localhost', 19551)>}...
+[2016-12-05 18:04:26,007]Coordinator[('localhost', 26153)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:26,008]Worker[('localhost', 19578)]:DEBUG: Running setup..
+[2016-12-05 18:04:26,008]Worker[('localhost', 19578)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:26,008]Worker[('localhost', 19551)]:DEBUG: Running setup..
+[2016-12-05 18:04:26,009]Worker[('localhost', 19551)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:26,009]Worker[('localhost', 36473)]:DEBUG: Running setup..
+[2016-12-05 18:04:26,009]Worker[('localhost', 36473)]:DEBUG: 'start' command received, commencing...
+[2016-12-05 18:04:26,936]Client[('localhost', 21872)]:INFO: Setting request to write request
+[2016-12-05 18:04:26,936]Client[('localhost', 21872)]:INFO:  Application Sending message to coordinator
+
+[2016-12-05 18:04:26,937]Client[('localhost', 21872)]:DEBUG: triggering event <SentEvent time:None to:<Coordinator('localhost', 29702)> from:<Client('localhost', 21872)> msg:('evalRequest', <Client('localhost', 21872)>, <classes.request.Request object at 0x7fd3940ec048>, 0)>
+[2016-12-05 18:04:26,937]Coordinator[('localhost', 29702)]:DEBUG: triggering event <ReceivedEvent time:None to:None from:<Client('localhost', 21872)> msg:('evalRequest', <Client('localhost', 21872)>, <classes.request.Request object at 0x7fd3940e8748>, 0)>
+[2016-12-05 18:04:26,937]Client[('localhost', 21872)]:INFO: Sending Request at index :  1
+[2016-12-05 18:04:26,938]Client[('localhost', 21872)]:INFO: found might read attrs
+[2016-12-05 18:04:26,938]Coordinator[('localhost', 29702)]:INFO: Received Request from Client
+[2016-12-05 18:04:26,938]Coordinator[('localhost', 29702)]:INFO: ....Evaluating Request....
+[2016-12-05 18:04:26,938]Coordinator[('localhost', 29702)]:INFO: Processing object 0
+[2016-12-05 18:04:26,939]Coordinator[('localhost', 29702)]:INFO: Request is of type Write
+[2016-12-05 18:04:26,939]Coordinator[('localhost', 29702)]:INFO: Not Found entry for  customerA  in latestVersionBefore
+[2016-12-05 18:04:26,939]Coordinator[('localhost', 29702)]:INFO: {'subscriptionType': [<classes.version.Version object at 0x7fd3940e8f28>]}
+[2016-12-05 18:04:26,940]Coordinator[('localhost', 29702)]:INFO: done with latesVersionBefore update
+[2016-12-05 18:04:26,940]Coordinator[('localhost', 29702)]:INFO: -----------------------VersionMap---------------------------
+[2016-12-05 18:04:26,940]Coordinator[('localhost', 29702)]:INFO: Object :  customerA
+[2016-12-05 18:04:26,940]Coordinator[('localhost', 29702)]:INFO: Attribute :  subscriptionType
+[2016-12-05 18:04:26,940]Coordinator[('localhost', 29702)]:INFO: version :  {'pendingMightRead': {348}, 'wts': 0, 'rts': 0}
+[2016-12-05 18:04:26,940]Coordinator[('localhost', 29702)]:INFO: --------------------------------------------------
+[2016-12-05 18:04:26,940]Coordinator[('localhost', 29702)]:INFO: Could not found object  customerA  in cache
+[2016-12-05 18:04:26,940]Coordinator[('localhost', 29702)]:INFO: done with cache update
+[2016-12-05 18:04:26,940]Coordinator[('localhost', 29702)]:INFO: Sending to coordinator responsible for object with order 1
+[2016-12-05 18:04:26,941]Coordinator[('localhost', 14098)]:DEBUG: triggering event <ReceivedEvent time:None to:None from:<Coordinator('localhost', 29702)> msg:('evalRequest', <Coordinator('localhost', 29702)>, <classes.request.Request object at 0x7fd3940e75c0>, 1)>
+[2016-12-05 18:04:26,942]Coordinator[('localhost', 14098)]:INFO: Received Request from Client
+[2016-12-05 18:04:26,943]Coordinator[('localhost', 14098)]:INFO: ....Evaluating Request....
+[2016-12-05 18:04:26,943]Coordinator[('localhost', 14098)]:INFO: Processing object 1
+[2016-12-05 18:04:26,943]Coordinator[('localhost', 14098)]:INFO: Request is of type Write
+[2016-12-05 18:04:26,944]Coordinator[('localhost', 14098)]:INFO: Not Found entry for  movieA  in latestVersionBefore
+[2016-12-05 18:04:26,944]Coordinator[('localhost', 14098)]:INFO: {'viewCount': [<classes.version.Version object at 0x7fd3940e7a20>]}
+[2016-12-05 18:04:26,944]Coordinator[('localhost', 14098)]:INFO: done with latesVersionBefore update
+[2016-12-05 18:04:26,945]Coordinator[('localhost', 29702)]:DEBUG: triggering event <SentEvent time:None to:<Coordinator('localhost', 14098)> from:<Coordinator('localhost', 29702)> msg:('evalRequest', <Coordinator('localhost', 29702)>, <classes.request.Request object at 0x7fd3940e8b38>, 1)>
+[2016-12-05 18:04:26,945]Coordinator[('localhost', 14098)]:INFO: -----------------------VersionMap---------------------------
+[2016-12-05 18:04:26,945]Coordinator[('localhost', 14098)]:INFO: Object :  movieA
+[2016-12-05 18:04:26,945]Coordinator[('localhost', 14098)]:INFO: Attribute :  viewCount
+[2016-12-05 18:04:26,945]Coordinator[('localhost', 14098)]:INFO: version :  {'pendingMightRead': {348}, 'wts': 0, 'rts': 0}
+[2016-12-05 18:04:26,945]Coordinator[('localhost', 14098)]:INFO: --------------------------------------------------
+[2016-12-05 18:04:26,945]Coordinator[('localhost', 14098)]:INFO: Could not found object  movieA  in cache
+[2016-12-05 18:04:26,946]Coordinator[('localhost', 14098)]:INFO: done with cache update
+[2016-12-05 18:04:26,946]Coordinator[('localhost', 14098)]:INFO: Coordinator sending worker request
+[2016-12-05 18:04:26,946]Coordinator[('localhost', 14098)]:INFO: Setting coordinatorId to  ('localhost', 14098)
+[2016-12-05 18:04:26,946]Coordinator[('localhost', 14098)]:DEBUG: triggering event <SentEvent time:None to:<Worker('localhost', 21392)> from:<Coordinator('localhost', 14098)> msg:('workerRequest', <classes.request.Request object at 0x7fd3940e7898>)>
+[2016-12-05 18:04:26,947]Coordinator[('localhost', 14098)]:INFO: Coordinator sent worker request
+[2016-12-05 18:04:26,947]Worker[('localhost', 21392)]:DEBUG: triggering event <ReceivedEvent time:None to:None from:<Coordinator('localhost', 14098)> msg:('workerRequest', <classes.request.Request object at 0x7fd3940e79e8>)>
+[2016-12-05 18:04:26,948]Worker[('localhost', 21392)]:INFO: Worker received evalRequest from coordinator
+[2016-12-05 18:04:26,948]Worker[('localhost', 21392)]:INFO: Worker sending read request to db
+[2016-12-05 18:04:26,949]Worker[('localhost', 21392)]:DEBUG: triggering event <SentEvent time:None to:<Database('localhost', 11950)> from:<Worker('localhost', 21392)> msg:('read_request', <classes.request.Request object at 0x7fd3940e7b70>, <Worker('localhost', 21392)>)>
+[2016-12-05 18:04:26,950]Database[('localhost', 11950)]:DEBUG: triggering event <ReceivedEvent time:None to:None from:<Worker('localhost', 21392)> msg:('read_request', <classes.request.Request object at 0x7fd3940e8e10>, <Worker('localhost', 21392)>)>
+[2016-12-05 18:04:26,951]Database[('localhost', 11950)]:INFO: DB Received read request from worker
+[2016-12-05 18:04:26,952]Database[('localhost', 11950)]:INFO: DB Returning  {'customerA': {'subscriptionType': 'basic'}, 'movieA': {'viewCount': '2'}}
+[2016-12-05 18:04:26,954]Coordinator[('localhost', 14098)]:DEBUG: triggering event <ReceivedEvent time:0 to:None from:<Worker('localhost', 21392)> msg:('sent', 1)>
+[2016-12-05 18:04:26,955]Database[('localhost', 11950)]:DEBUG: triggering event <SentEvent time:None to:<Worker('localhost', 21392)> from:<Database('localhost', 11950)> msg:('dbResponse', <classes.request.Request object at 0x7fd3940e8ef0>)>
+[2016-12-05 18:04:26,955]Worker[('localhost', 21392)]:DEBUG: triggering event <ReceivedEvent time:None to:None from:<Database('localhost', 11950)> msg:('dbResponse', <classes.request.Request object at 0x7fd3940e7be0>)>
+[2016-12-05 18:04:26,955]Worker[('localhost', 21392)]:INFO: Inside Worker Evaluate Policy
+[2016-12-05 18:04:26,956]Worker[('localhost', 21392)]:INFO: Found a matching rule for this policy
+[2016-12-05 18:04:26,956]Worker[('localhost', 21392)]:INFO: Need to validate that viewCount  <5
+[2016-12-05 18:04:26,957]Worker[('localhost', 21392)]:INFO: TCID  3
+[2016-12-05 18:04:27,939]Client[('localhost', 21872)]:INFO:  Application Sending message to coordinator
+
+[2016-12-05 18:04:27,940]Client[('localhost', 21872)]:DEBUG: triggering event <SentEvent time:None to:<Coordinator('localhost', 13745)> from:<Client('localhost', 21872)> msg:('evalRequest', <Client('localhost', 21872)>, <classes.request.Request object at 0x7fd3940ec080>, 0)>
+[2016-12-05 18:04:27,940]Coordinator[('localhost', 13745)]:DEBUG: triggering event <ReceivedEvent time:None to:None from:<Client('localhost', 21872)> msg:('evalRequest', <Client('localhost', 21872)>, <classes.request.Request object at 0x7fd3940e8da0>, 0)>
+[2016-12-05 18:04:27,941]Coordinator[('localhost', 13745)]:INFO: Received Request from Client
+[2016-12-05 18:04:27,942]Coordinator[('localhost', 13745)]:INFO: ....Evaluating Request....
+[2016-12-05 18:04:27,942]Coordinator[('localhost', 13745)]:INFO: Checking for conflicting attributes for read request
+[2016-12-05 18:04:27,942]Coordinator[('localhost', 13745)]:INFO: Processing object 0
+[2016-12-05 18:04:27,942]Coordinator[('localhost', 13745)]:INFO: Request is of type Read-Only
+[2016-12-05 18:04:27,942]Coordinator[('localhost', 13745)]:INFO: Not Found entry for  customerB  in latestVersionBefore
+[2016-12-05 18:04:27,943]Coordinator[('localhost', 13745)]:INFO: {'subscriptionType': [<classes.version.Version object at 0x7fd3940ec198>]}
+[2016-12-05 18:04:27,943]Coordinator[('localhost', 13745)]:INFO: done with latesVersionBefore update
+[2016-12-05 18:04:27,943]Coordinator[('localhost', 13745)]:INFO: -----------------------VersionMap---------------------------
+[2016-12-05 18:04:27,943]Coordinator[('localhost', 13745)]:INFO: Object :  customerB
+[2016-12-05 18:04:27,943]Coordinator[('localhost', 13745)]:INFO: Attribute :  subscriptionType
+[2016-12-05 18:04:27,943]Coordinator[('localhost', 13745)]:INFO: version :  {'pendingMightRead': {734}, 'wts': 0, 'rts': 0}
+[2016-12-05 18:04:27,943]Coordinator[('localhost', 13745)]:INFO: --------------------------------------------------
+[2016-12-05 18:04:27,943]Coordinator[('localhost', 13745)]:INFO: Could not found object  customerB  in cache
+[2016-12-05 18:04:27,943]Coordinator[('localhost', 13745)]:INFO: done with cache update
+[2016-12-05 18:04:27,943]Coordinator[('localhost', 13745)]:INFO: Sending to coordinator responsible for object with order 1
+[2016-12-05 18:04:27,944]Coordinator[('localhost', 14098)]:DEBUG: triggering event <ReceivedEvent time:None to:None from:<Coordinator('localhost', 13745)> msg:('evalRequest', <Coordinator('localhost', 13745)>, <classes.request.Request object at 0x7fd3940e7710>, 1)>
+[2016-12-05 18:04:27,945]Coordinator[('localhost', 14098)]:INFO: Received Request from Client
+[2016-12-05 18:04:27,945]Coordinator[('localhost', 14098)]:INFO: ....Evaluating Request....
+[2016-12-05 18:04:27,945]Coordinator[('localhost', 14098)]:INFO: Checking for conflicting attributes for read request
+[2016-12-05 18:04:27,945]Coordinator[('localhost', 14098)]:INFO: Processing object 1
+[2016-12-05 18:04:27,945]Coordinator[('localhost', 14098)]:INFO: Request is of type Read-Only
+[2016-12-05 18:04:27,946]Coordinator[('localhost', 14098)]:INFO: Found entry for  movieA  in latestVersionBefore
+[2016-12-05 18:04:27,946]Coordinator[('localhost', 14098)]:INFO: {'viewCount': [<classes.version.Version object at 0x7fd3940e7a20>]}
+[2016-12-05 18:04:27,946]Coordinator[('localhost', 14098)]:INFO: vesionList for  viewCount  not empty
+[2016-12-05 18:04:27,946]Coordinator[('localhost', 14098)]:INFO: done with latesVersionBefore update
+[2016-12-05 18:04:27,946]Coordinator[('localhost', 14098)]:INFO: -----------------------VersionMap---------------------------
+[2016-12-05 18:04:27,946]Coordinator[('localhost', 14098)]:INFO: Object :  movieA
+[2016-12-05 18:04:27,946]Coordinator[('localhost', 14098)]:INFO: Attribute :  viewCount
+[2016-12-05 18:04:27,946]Coordinator[('localhost', 14098)]:INFO: version :  {'pendingMightRead': {348}, 'wts': 0, 'rts': 1480989867}
+[2016-12-05 18:04:27,946]Coordinator[('localhost', 14098)]:INFO: --------------------------------------------------
+[2016-12-05 18:04:27,946]Coordinator[('localhost', 14098)]:INFO: Could not found object  movieA  in cache
+[2016-12-05 18:04:27,946]Coordinator[('localhost', 13745)]:DEBUG: triggering event <SentEvent time:None to:<Coordinator('localhost', 14098)> from:<Coordinator('localhost', 13745)> msg:('evalRequest', <Coordinator('localhost', 13745)>, <classes.request.Request object at 0x7fd3940ec2e8>, 1)>
+[2016-12-05 18:04:27,946]Coordinator[('localhost', 14098)]:INFO: done with cache update
+[2016-12-05 18:04:27,947]Coordinator[('localhost', 14098)]:INFO: Coordinator sending worker request
+[2016-12-05 18:04:27,947]Coordinator[('localhost', 14098)]:INFO: Setting coordinatorId to  ('localhost', 14098)
+[2016-12-05 18:04:27,947]Worker[('localhost', 22915)]:DEBUG: triggering event <ReceivedEvent time:None to:None from:<Coordinator('localhost', 14098)> msg:('workerRequest', <classes.request.Request object at 0x7fd3940e7be0>)>
+[2016-12-05 18:04:27,948]Worker[('localhost', 22915)]:INFO: Worker received evalRequest from coordinator
+[2016-12-05 18:04:27,948]Worker[('localhost', 22915)]:INFO: Worker sending read request to db
+[2016-12-05 18:04:27,948]Coordinator[('localhost', 14098)]:DEBUG: triggering event <SentEvent time:None to:<Worker('localhost', 22915)> from:<Coordinator('localhost', 14098)> msg:('workerRequest', <classes.request.Request object at 0x7fd3940e7ac8>)>
+[2016-12-05 18:04:27,949]Coordinator[('localhost', 14098)]:INFO: Coordinator sent worker request
+[2016-12-05 18:04:27,949]Worker[('localhost', 22915)]:DEBUG: triggering event <SentEvent time:None to:<Database('localhost', 11950)> from:<Worker('localhost', 22915)> msg:('read_request', <classes.request.Request object at 0x7fd3940e7d30>, <Worker('localhost', 22915)>)>
+[2016-12-05 18:04:27,949]Database[('localhost', 11950)]:DEBUG: triggering event <ReceivedEvent time:None to:None from:<Worker('localhost', 22915)> msg:('read_request', <classes.request.Request object at 0x7fd3940e8eb8>, <Worker('localhost', 22915)>)>
+[2016-12-05 18:04:27,949]Database[('localhost', 11950)]:INFO: DB Received read request from worker
+[2016-12-05 18:04:27,950]Database[('localhost', 11950)]:INFO: DB Returning  {'movieA': {'viewCount': '2'}, 'customerB': {'subscriptionType': 'premium'}}
+[2016-12-05 18:04:27,950]Database[('localhost', 11950)]:DEBUG: triggering event <SentEvent time:None to:<Worker('localhost', 22915)> from:<Database('localhost', 11950)> msg:('dbResponse', <classes.request.Request object at 0x7fd3940e8ef0>)>
+[2016-12-05 18:04:27,950]Coordinator[('localhost', 14098)]:DEBUG: triggering event <ReceivedEvent time:0 to:None from:<Worker('localhost', 22915)> msg:('sent', 1)>
+[2016-12-05 18:04:27,950]Worker[('localhost', 22915)]:DEBUG: triggering event <ReceivedEvent time:None to:None from:<Database('localhost', 11950)> msg:('dbResponse', <classes.request.Request object at 0x7fd3940e7da0>)>
+[2016-12-05 18:04:27,951]Worker[('localhost', 22915)]:INFO: Inside Worker Evaluate Policy
+[2016-12-05 18:04:27,952]Worker[('localhost', 22915)]:INFO: Found a matching rule for this policy
+[2016-12-05 18:04:27,952]Worker[('localhost', 22915)]:INFO: Need to validate that viewCount  <5
+[2016-12-05 18:04:27,955]Worker[('localhost', 22915)]:DEBUG: triggering event <SentEvent time:None to:<Coordinator('localhost', 13745)> from:<Worker('localhost', 22915)> msg:('updateReadAttr', <Worker('localhost', 22915)>, <classes.request.Request object at 0x7fd3940e7b70>, 0)>
+[2016-12-05 18:04:27,957]Coordinator[('localhost', 13745)]:DEBUG: triggering event <ReceivedEvent time:None to:None from:<Worker('localhost', 22915)> msg:('updateReadAttr', <Worker('localhost', 22915)>, <classes.request.Request object at 0x7fd3940e3978>, 0)>
+[2016-12-05 18:04:27,957]Worker[('localhost', 22915)]:DEBUG: triggering event <SentEvent time:None to:<Coordinator('localhost', 14098)> from:<Worker('localhost', 22915)> msg:('updateReadAttr', <Worker('localhost', 22915)>, <classes.request.Request object at 0x7fd3940e7b70>, 1)>
+[2016-12-05 18:04:27,958]Worker[('localhost', 22915)]:INFO: Worker Sending Decision to client for Read Only Request
+[2016-12-05 18:04:27,959]Coordinator[('localhost', 13745)]:INFO: Received updateReadAttr from worker
+[2016-12-05 18:04:27,960]Coordinator[('localhost', 13745)]:INFO: ....Updating Read Attributes....
+[2016-12-05 18:04:27,960]Worker[('localhost', 22915)]:DEBUG: triggering event <SentEvent time:None to:<Client('localhost', 21872)> from:<Worker('localhost', 22915)> msg:('evalDecision', <classes.request.Request object at 0x7fd3940e7b70>)>
+[2016-12-05 18:04:27,961]Client[('localhost', 21872)]:DEBUG: triggering event <ReceivedEvent time:None to:None from:<Worker('localhost', 22915)> msg:('evalDecision', <classes.request.Request object at 0x7fd3940e8e10>)>
+[2016-12-05 18:04:27,961]Coordinator[('localhost', 13745)]:INFO: Found entry for  customerB  in latestVersionBefore
+[2016-12-05 18:04:27,961]Coordinator[('localhost', 13745)]:INFO: {'subscriptionType': [<classes.version.Version object at 0x7fd3940ec198>]}
+[2016-12-05 18:04:27,961]Client[('localhost', 21872)]:INFO: --------- DECISION RECEIVED------------
+[2016-12-05 18:04:27,962]Coordinator[('localhost', 13745)]:INFO: vesionList for  subscriptionType  not empty
+[2016-12-05 18:04:27,962]Coordinator[('localhost', 13745)]:INFO: REMOVED  734
+[2016-12-05 18:04:27,962]Coordinator[('localhost', 13745)]:INFO: ....Done Updating Read Attributes....
+[2016-12-05 18:04:27,964]Coordinator[('localhost', 14098)]:DEBUG: triggering event <ReceivedEvent time:0 to:None from:<Worker('localhost', 22915)> msg:('sent', 1)>
+[2016-12-05 18:04:27,962]Client[('localhost', 21872)]:INFO: Application Received Decision for request  734
+[2016-12-05 18:04:27,965]Coordinator[('localhost', 14098)]:DEBUG: triggering event <ReceivedEvent time:None to:None from:<Worker('localhost', 22915)> msg:('updateReadAttr', <Worker('localhost', 22915)>, <classes.request.Request object at 0x7fd3940e79b0>, 1)>
+[2016-12-05 18:04:27,965]Client[('localhost', 21872)]:INFO:  Decision is  True
+[2016-12-05 18:04:27,965]Client[('localhost', 21872)]:INFO: ----------------------------------------
+[2016-12-05 18:04:27,966]Coordinator[('localhost', 14098)]:INFO: Received updateReadAttr from worker
+[2016-12-05 18:04:27,966]Coordinator[('localhost', 14098)]:INFO: ....Updating Read Attributes....
+[2016-12-05 18:04:27,966]Coordinator[('localhost', 14098)]:INFO: ....Done Updating Read Attributes....
+[2016-12-05 18:04:27,967]Coordinator[('localhost', 14098)]:DEBUG: triggering event <ReceivedEvent time:0 to:None from:<Worker('localhost', 22915)> msg:('sent', 1)>
+[2016-12-05 18:04:27,967]Coordinator[('localhost', 14098)]:DEBUG: triggering event <ReceivedEvent time:0 to:None from:<Worker('localhost', 22915)> msg:('sent', 1)>
+[2016-12-05 18:04:28,957]Worker[('localhost', 21392)]:INFO: Worker evaluated decision to be True.
+[2016-12-05 18:04:28,957]Worker[('localhost', 21392)]:INFO: Worker sending updated write request to coordinator  ('localhost', 14098)
+[2016-12-05 18:04:28,958]Worker[('localhost', 21392)]:DEBUG: triggering event <SentEvent time:None to:<Coordinator('localhost', 14098)> from:<Worker('localhost', 21392)> msg:('updateObj', <Worker('localhost', 21392)>, <classes.request.Request object at 0x7fd3940e7978>, 1)>
+[2016-12-05 18:04:28,958]Worker[('localhost', 21392)]:INFO: Worker sent updated write request to coodinator
+[2016-12-05 18:04:28,960]Coordinator[('localhost', 14098)]:DEBUG: triggering event <ReceivedEvent time:None to:None from:<Worker('localhost', 21392)> msg:('updateObj', <Worker('localhost', 21392)>, <classes.request.Request object at 0x7fd3940e7b38>, 1)>
+[2016-12-05 18:04:28,962]Coordinator[('localhost', 14098)]:INFO: Received updateObj from worker
+[2016-12-05 18:04:28,962]Coordinator[('localhost', 14098)]:INFO: ....Updating Write Attributes....
+[2016-12-05 18:04:28,963]Coordinator[('localhost', 14098)]:INFO: Checking for first conflict
+[2016-12-05 18:04:28,963]Coordinator[('localhost', 14098)]:INFO: Inside check for conflict
+[2016-12-05 18:04:28,963]Coordinator[('localhost', 14098)]:INFO: viewCount 3
+[2016-12-05 18:04:28,963]Coordinator[('localhost', 14098)]:INFO: Found entry for  movieA  in latestVersionBefore
+[2016-12-05 18:04:28,963]Coordinator[('localhost', 14098)]:INFO: {'viewCount': [<classes.version.Version object at 0x7fd3940e7a20>]}
+[2016-12-05 18:04:28,963]Coordinator[('localhost', 14098)]:INFO: vesionList for  viewCount  not empty
+[2016-12-05 18:04:28,963]Coordinator[('localhost', 14098)]:INFO: {'pendingMightRead': {348}, 'wts': 0, 'rts': 1480989867}
+[2016-12-05 18:04:28,964]Coordinator[('localhost', 14098)]:INFO: Restarting Request because of conflict
+[2016-12-05 18:04:28,964]Coordinator[('localhost', 14098)]:INFO: done with removing reqId from pendingMightRead
+[2016-12-05 18:04:28,964]Coordinator[('localhost', 14098)]:INFO: Coordinator Sending restart request to coordinator responsible for object at order 0
+
+[2016-12-05 18:04:28,965]Coordinator[('localhost', 14098)]:DEBUG: triggering event <SentEvent time:None to:<Coordinator('localhost', 29702)> from:<Coordinator('localhost', 14098)> msg:('restartRequest', <Coordinator('localhost', 14098)>, <classes.request.Request object at 0x7fd3940e77b8>, 0)>
+[2016-12-05 18:04:28,966]Coordinator[('localhost', 14098)]:DEBUG: triggering event <ReceivedEvent time:0 to:None from:<Worker('localhost', 21392)> msg:('sent', 1)>
+[2016-12-05 18:04:28,966]Coordinator[('localhost', 29702)]:DEBUG: triggering event <ReceivedEvent time:None to:None from:<Coordinator('localhost', 14098)> msg:('restartRequest', <Coordinator('localhost', 14098)>, <classes.request.Request object at 0x7fd3940e8cf8>, 0)>
+[2016-12-05 18:04:28,967]Coordinator[('localhost', 29702)]:INFO: Received restartRequest from coordinator
+[2016-12-05 18:04:28,968]Coordinator[('localhost', 29702)]:INFO: Found entry for  customerA  in latestVersionBefore
+[2016-12-05 18:04:28,968]Coordinator[('localhost', 29702)]:INFO: {'subscriptionType': [<classes.version.Version object at 0x7fd3940e8f28>]}
+[2016-12-05 18:04:28,968]Coordinator[('localhost', 29702)]:INFO: vesionList for  subscriptionType  not empty
+[2016-12-05 18:04:28,968]Coordinator[('localhost', 29702)]:INFO: ....Evaluating Request....
+[2016-12-05 18:04:28,971]Coordinator[('localhost', 29702)]:INFO: Processing object 0
+[2016-12-05 18:04:28,972]Coordinator[('localhost', 29702)]:INFO: Request is of type Write
+[2016-12-05 18:04:28,972]Coordinator[('localhost', 29702)]:INFO: Found entry for  customerA  in latestVersionBefore
+[2016-12-05 18:04:28,973]Coordinator[('localhost', 29702)]:INFO: {'subscriptionType': [<classes.version.Version object at 0x7fd3940e8f28>]}
+[2016-12-05 18:04:28,973]Coordinator[('localhost', 29702)]:INFO: vesionList for  subscriptionType  not empty
+[2016-12-05 18:04:28,973]Coordinator[('localhost', 29702)]:INFO: done with latesVersionBefore update
+[2016-12-05 18:04:28,974]Coordinator[('localhost', 29702)]:INFO: -----------------------VersionMap---------------------------
+[2016-12-05 18:04:28,974]Coordinator[('localhost', 29702)]:INFO: Object :  customerA
+[2016-12-05 18:04:28,974]Coordinator[('localhost', 29702)]:INFO: Attribute :  subscriptionType
+[2016-12-05 18:04:28,974]Coordinator[('localhost', 29702)]:INFO: version :  {'pendingMightRead': {348}, 'wts': 0, 'rts': 0}
+[2016-12-05 18:04:28,974]Coordinator[('localhost', 29702)]:INFO: --------------------------------------------------
+[2016-12-05 18:04:28,975]Coordinator[('localhost', 29702)]:INFO: Could not found object  customerA  in cache
+[2016-12-05 18:04:28,975]Coordinator[('localhost', 29702)]:INFO: done with cache update
+[2016-12-05 18:04:28,975]Coordinator[('localhost', 29702)]:INFO: Sending to coordinator responsible for object with order 1
+[2016-12-05 18:04:28,976]Coordinator[('localhost', 29702)]:DEBUG: triggering event <SentEvent time:None to:<Coordinator('localhost', 14098)> from:<Coordinator('localhost', 29702)> msg:('evalRequest', <Coordinator('localhost', 29702)>, <classes.request.Request object at 0x7fd3940e3e48>, 1)>
+[2016-12-05 18:04:28,976]Coordinator[('localhost', 14098)]:DEBUG: triggering event <ReceivedEvent time:None to:None from:<Coordinator('localhost', 29702)> msg:('evalRequest', <Coordinator('localhost', 29702)>, <classes.request.Request object at 0x7fd3940e7d30>, 1)>
+[2016-12-05 18:04:28,977]Coordinator[('localhost', 14098)]:INFO: Received Request from Client
+[2016-12-05 18:04:28,977]Coordinator[('localhost', 14098)]:INFO: ....Evaluating Request....
+[2016-12-05 18:04:28,978]Coordinator[('localhost', 14098)]:INFO: Processing object 1
+[2016-12-05 18:04:28,978]Coordinator[('localhost', 14098)]:INFO: Request is of type Write
+[2016-12-05 18:04:28,978]Coordinator[('localhost', 14098)]:INFO: Found entry for  movieA  in latestVersionBefore
+[2016-12-05 18:04:28,978]Coordinator[('localhost', 14098)]:INFO: {'viewCount': [<classes.version.Version object at 0x7fd3940e7a20>]}
+[2016-12-05 18:04:28,979]Coordinator[('localhost', 14098)]:INFO: vesionList for  viewCount  not empty
+[2016-12-05 18:04:28,979]Coordinator[('localhost', 14098)]:INFO: done with latesVersionBefore update
+[2016-12-05 18:04:28,979]Coordinator[('localhost', 14098)]:INFO: -----------------------VersionMap---------------------------
+[2016-12-05 18:04:28,979]Coordinator[('localhost', 14098)]:INFO: Object :  movieA
+[2016-12-05 18:04:28,979]Coordinator[('localhost', 14098)]:INFO: Attribute :  viewCount
+[2016-12-05 18:04:28,980]Coordinator[('localhost', 14098)]:INFO: version :  {'pendingMightRead': {348}, 'wts': 0, 'rts': 1480989867}
+[2016-12-05 18:04:28,980]Coordinator[('localhost', 14098)]:INFO: --------------------------------------------------
+[2016-12-05 18:04:28,980]Coordinator[('localhost', 14098)]:INFO: Could not found object  movieA  in cache
+[2016-12-05 18:04:28,980]Coordinator[('localhost', 14098)]:INFO: done with cache update
+[2016-12-05 18:04:28,980]Coordinator[('localhost', 14098)]:INFO: Coordinator sending worker request
+[2016-12-05 18:04:28,981]Coordinator[('localhost', 14098)]:INFO: Setting coordinatorId to  ('localhost', 14098)
+[2016-12-05 18:04:28,981]Worker[('localhost', 20663)]:DEBUG: triggering event <ReceivedEvent time:None to:None from:<Coordinator('localhost', 14098)> msg:('workerRequest', <classes.request.Request object at 0x7fd3940e77f0>)>
+[2016-12-05 18:04:28,982]Worker[('localhost', 20663)]:INFO: Worker received evalRequest from coordinator
+[2016-12-05 18:04:28,983]Worker[('localhost', 20663)]:INFO: Worker sending read request to db
+[2016-12-05 18:04:28,984]Worker[('localhost', 20663)]:DEBUG: triggering event <SentEvent time:None to:<Database('localhost', 11950)> from:<Worker('localhost', 20663)> msg:('read_request', <classes.request.Request object at 0x7fd3940e7978>, <Worker('localhost', 20663)>)>
+[2016-12-05 18:04:28,984]Database[('localhost', 11950)]:DEBUG: triggering event <ReceivedEvent time:None to:None from:<Worker('localhost', 20663)> msg:('read_request', <classes.request.Request object at 0x7fd3940e8dd8>, <Worker('localhost', 20663)>)>
+[2016-12-05 18:04:28,985]Database[('localhost', 11950)]:INFO: DB Received read request from worker
+[2016-12-05 18:04:28,985]Database[('localhost', 11950)]:INFO: DB Returning  {'customerA': {'subscriptionType': 'basic'}, 'movieA': {'viewCount': '2'}}
+[2016-12-05 18:04:28,989]Worker[('localhost', 20663)]:DEBUG: triggering event <ReceivedEvent time:None to:None from:<Database('localhost', 11950)> msg:('dbResponse', <classes.request.Request object at 0x7fd3940e79e8>)>
+[2016-12-05 18:04:28,991]Worker[('localhost', 20663)]:INFO: Inside Worker Evaluate Policy
+[2016-12-05 18:04:28,992]Database[('localhost', 11950)]:DEBUG: triggering event <SentEvent time:None to:<Worker('localhost', 20663)> from:<Database('localhost', 11950)> msg:('dbResponse', <classes.request.Request object at 0x7fd3940e8fd0>)>
+[2016-12-05 18:04:28,991]Worker[('localhost', 20663)]:INFO: Found a matching rule for this policy
+[2016-12-05 18:04:28,992]Worker[('localhost', 20663)]:INFO: Need to validate that viewCount  <5
+[2016-12-05 18:04:28,992]Worker[('localhost', 20663)]:INFO: TCID  3
+[2016-12-05 18:04:28,996]Coordinator[('localhost', 14098)]:DEBUG: triggering event <SentEvent time:None to:<Worker('localhost', 20663)> from:<Coordinator('localhost', 14098)> msg:('workerRequest', <classes.request.Request object at 0x7fd3940e7e10>)>
+[2016-12-05 18:04:28,996]Coordinator[('localhost', 14098)]:INFO: Coordinator sent worker request
+[2016-12-05 18:04:28,996]Coordinator[('localhost', 14098)]:DEBUG: triggering event <ReceivedEvent time:0 to:None from:<Worker('localhost', 20663)> msg:('sent', 1)>
+[2016-12-05 18:04:30,995]Worker[('localhost', 20663)]:INFO: Worker evaluated decision to be True.
+[2016-12-05 18:04:30,997]Worker[('localhost', 20663)]:INFO: Worker sending updated write request to coordinator  ('localhost', 14098)
+[2016-12-05 18:04:31,001]Coordinator[('localhost', 14098)]:DEBUG: triggering event <ReceivedEvent time:None to:None from:<Worker('localhost', 20663)> msg:('updateObj', <Worker('localhost', 20663)>, <classes.request.Request object at 0x7fd3940e7ef0>, 1)>
+[2016-12-05 18:04:31,004]Worker[('localhost', 20663)]:DEBUG: triggering event <SentEvent time:None to:<Coordinator('localhost', 14098)> from:<Worker('localhost', 20663)> msg:('updateObj', <Worker('localhost', 20663)>, <classes.request.Request object at 0x7fd3940e7780>, 1)>
+[2016-12-05 18:04:31,003]Coordinator[('localhost', 14098)]:INFO: Received updateObj from worker
+[2016-12-05 18:04:31,006]Coordinator[('localhost', 14098)]:INFO: ....Updating Write Attributes....
+[2016-12-05 18:04:31,014]Worker[('localhost', 20663)]:INFO: Worker sent updated write request to coodinator
+[2016-12-05 18:04:31,015]Coordinator[('localhost', 14098)]:INFO: Checking for first conflict
+[2016-12-05 18:04:31,015]Coordinator[('localhost', 14098)]:INFO: Inside check for conflict
+[2016-12-05 18:04:31,015]Coordinator[('localhost', 14098)]:INFO: viewCount 3
+[2016-12-05 18:04:31,016]Coordinator[('localhost', 14098)]:INFO: Found entry for  movieA  in latestVersionBefore
+[2016-12-05 18:04:31,016]Coordinator[('localhost', 14098)]:INFO: {'viewCount': [<classes.version.Version object at 0x7fd3940e7a20>]}
+[2016-12-05 18:04:31,016]Coordinator[('localhost', 14098)]:INFO: vesionList for  viewCount  not empty
+[2016-12-05 18:04:31,016]Coordinator[('localhost', 14098)]:INFO: {'pendingMightRead': {348}, 'wts': 0, 'rts': 1480989867}
+[2016-12-05 18:04:31,018]Coordinator[('localhost', 14098)]:INFO: conflict not found
+[2016-12-05 18:04:31,018]Coordinator[('localhost', 14098)]:INFO: Found entry for  movieA  in latestVersionBefore
+[2016-12-05 18:04:31,019]Coordinator[('localhost', 14098)]:INFO: {'viewCount': [<classes.version.Version object at 0x7fd3940e7a20>]}
+[2016-12-05 18:04:31,019]Coordinator[('localhost', 14098)]:INFO: vesionList for  viewCount  not empty
+[2016-12-05 18:04:31,019]Coordinator[('localhost', 14098)]:INFO: PENDING LIST {348}
+[2016-12-05 18:04:31,019]Coordinator[('localhost', 14098)]:INFO: Checking for second conflict
+[2016-12-05 18:04:31,019]Coordinator[('localhost', 14098)]:INFO: Inside check for conflict
+[2016-12-05 18:04:31,020]Coordinator[('localhost', 14098)]:INFO: viewCount 3
+[2016-12-05 18:04:31,020]Coordinator[('localhost', 14098)]:INFO: Found entry for  movieA  in latestVersionBefore
+[2016-12-05 18:04:31,020]Coordinator[('localhost', 14098)]:INFO: {'viewCount': [<classes.version.Version object at 0x7fd3940e7a20>]}
+[2016-12-05 18:04:31,020]Coordinator[('localhost', 14098)]:INFO: vesionList for  viewCount  not empty
+[2016-12-05 18:04:31,020]Coordinator[('localhost', 14098)]:INFO: {'pendingMightRead': {348}, 'wts': 0, 'rts': 1480989867}
+[2016-12-05 18:04:31,020]Coordinator[('localhost', 14098)]:INFO: conflict not found second time
+[2016-12-05 18:04:31,020]Coordinator[('localhost', 14098)]:INFO: ....Updating DB....
+[2016-12-05 18:04:31,021]Coordinator[('localhost', 14098)]:INFO: Inside coordinator updateDB
+[2016-12-05 18:04:31,021]Database[('localhost', 11950)]:DEBUG: triggering event <ReceivedEvent time:None to:None from:<Coordinator('localhost', 14098)> msg:('write_request', 'movieA', 'viewCount', 1480989868, 3)>
+[2016-12-05 18:04:31,022]Database[('localhost', 11950)]:INFO: Inside DB WriteRequest
+[2016-12-05 18:04:31,022]Database[('localhost', 11950)]:INFO: After updating DB is 
+[2016-12-05 18:04:31,023]Database[('localhost', 11950)]:INFO: {'customerA': {'subscriptionType': [(1480989865, 'basic')]}, 'movieA': {'viewCount': [(1480989865, '2'), (1480989868, 3)]}, 'customerB': {'subscriptionType': [(1480989865, 'premium')]}}
+[2016-12-05 18:04:31,023]Coordinator[('localhost', 14098)]:DEBUG: triggering event <SentEvent time:None to:<Database('localhost', 11950)> from:<Coordinator('localhost', 14098)> msg:('write_request', 'movieA', 'viewCount', 1480989868, 3)>
+[2016-12-05 18:04:31,024]Coordinator[('localhost', 14098)]:INFO: ....Updating Cache....
+[2016-12-05 18:04:31,024]Coordinator[('localhost', 14098)]:INFO: ....Updating Latest Version Before....
+[2016-12-05 18:04:31,024]Coordinator[('localhost', 14098)]:INFO: Found entry for  movieA  in latestVersionBefore
+[2016-12-05 18:04:31,024]Coordinator[('localhost', 14098)]:INFO: {'viewCount': [<classes.version.Version object at 0x7fd3940e7a20>]}
+[2016-12-05 18:04:31,024]Coordinator[('localhost', 14098)]:INFO: vesionList for  viewCount  not empty
+[2016-12-05 18:04:31,025]Coordinator[('localhost', 14098)]:INFO: Found entry for  movieA  in latestVersionBefore
+[2016-12-05 18:04:31,025]Coordinator[('localhost', 14098)]:INFO: {'viewCount': [<classes.version.Version object at 0x7fd3940e7a20>]}
+[2016-12-05 18:04:31,025]Coordinator[('localhost', 14098)]:INFO: vesionList for  viewCount  not empty
+[2016-12-05 18:04:31,025]Coordinator[('localhost', 14098)]:INFO: {'pendingMightRead': {348}, 'wts': 1480989868, 'rts': 1480989867}
+[2016-12-05 18:04:31,025]Coordinator[('localhost', 14098)]:INFO: Coordinator Sending Decision to client for Request
+[2016-12-05 18:04:31,026]Coordinator[('localhost', 14098)]:DEBUG: triggering event <SentEvent time:None to:<Client('localhost', 21872)> from:<Coordinator('localhost', 14098)> msg:('evalDecision', <classes.request.Request object at 0x7fd3940d5f98>)>
+[2016-12-05 18:04:31,027]Coordinator[('localhost', 14098)]:INFO: ---------------------CacheUpdates-----------------------------
+[2016-12-05 18:04:31,028]Coordinator[('localhost', 14098)]:INFO: Object :  movieA
+[2016-12-05 18:04:31,028]Coordinator[('localhost', 14098)]:INFO: Attribute :  viewCount
+[2016-12-05 18:04:31,028]Coordinator[('localhost', 14098)]:INFO: attribute :  {'ts': 1480989868, 'val': 3, 'id': 'viewCount'}
+[2016-12-05 18:04:31,029]Coordinator[('localhost', 14098)]:INFO: --------------------------------------------------
+[2016-12-05 18:04:31,029]Coordinator[('localhost', 14098)]:INFO: -----------------------VersionMap---------------------------
+[2016-12-05 18:04:31,029]Coordinator[('localhost', 14098)]:INFO: Object :  movieA
+[2016-12-05 18:04:31,029]Coordinator[('localhost', 14098)]:INFO: Attribute :  viewCount
+[2016-12-05 18:04:31,029]Coordinator[('localhost', 14098)]:INFO: version :  {'pendingMightRead': set(), 'wts': 1480989868, 'rts': 1480989868}
+[2016-12-05 18:04:31,029]Coordinator[('localhost', 14098)]:INFO: --------------------------------------------------
+[2016-12-05 18:04:31,029]Coordinator[('localhost', 14098)]:DEBUG: triggering event <ReceivedEvent time:0 to:None from:<Worker('localhost', 20663)> msg:('sent', 1)>
+[2016-12-05 18:04:31,036]Client[('localhost', 21872)]:DEBUG: triggering event <ReceivedEvent time:None to:None from:<Coordinator('localhost', 14098)> msg:('evalDecision', <classes.request.Request object at 0x7fd3940e8eb8>)>
+[2016-12-05 18:04:31,037]Client[('localhost', 21872)]:INFO: --------- DECISION RECEIVED------------
+[2016-12-05 18:04:31,037]Client[('localhost', 21872)]:INFO: Application Received Decision for request  348
+[2016-12-05 18:04:31,037]Client[('localhost', 21872)]:INFO:  Decision is  True
+[2016-12-05 18:04:31,037]Client[('localhost', 21872)]:INFO: ----------------------------------------
+[2016-12-05 18:04:42,101]Worker[('localhost', 36022)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,101]Worker[('localhost', 20663)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,101]Worker[('localhost', 12090)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,101]Worker[('localhost', 19578)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,101]Worker[('localhost', 16179)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,101]Worker[('localhost', 21392)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,101]Worker[('localhost', 25006)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,101]Worker[('localhost', 13525)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,102]Coordinator[('localhost', 26153)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,102]Worker[('localhost', 34915)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,102]Coordinator[('localhost', 13745)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,102]Client[('localhost', 21872)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,102]Worker[('localhost', 26967)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,102]Coordinator[('localhost', 30689)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,102]Worker[('localhost', 17887)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,102]Coordinator[('localhost', 14381)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,102]Worker[('localhost', 24321)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,102]Worker[('localhost', 14606)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,103]Worker[('localhost', 29755)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,103]Worker[('localhost', 22519)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,103]Database[('localhost', 11950)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,102]da.api:ERROR: Caught unexpected global exception: NameError("name 'self' is not defined",)
+[2016-12-05 18:04:42,103]Worker[('localhost', 38907)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,103]Coordinator[('localhost', 29702)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,104]Worker[('localhost', 14666)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,104]Coordinator[('localhost', 14098)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,104]Worker[('localhost', 22915)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,104]Coordinator[('localhost', 12319)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,104]Worker[('localhost', 19210)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,104]Worker[('localhost', 18626)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,104]Coordinator[('localhost', 10353)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,105]Worker[('localhost', 28250)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,105]Coordinator[('localhost', 21260)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,105]Worker[('localhost', 36093)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,105]Coordinator[('localhost', 39136)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,105]Worker[('localhost', 19551)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,106]Worker[('localhost', 36473)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,106]Worker[('localhost', 12954)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,107]Worker[('localhost', 39220)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,107]Worker[('localhost', 26300)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,108]Worker[('localhost', 11817)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,108]Worker[('localhost', 33660)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,108]Worker[('localhost', 16617)]:DEBUG: Received KeyboardInterrupt, exiting
+[2016-12-05 18:04:42,115]da.api:INFO: Terminating...

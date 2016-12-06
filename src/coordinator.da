@@ -10,10 +10,10 @@ except ImportError:
     output("Failed to import worker class")
 
 class Coordinator(process):
-    def setup(numWorkers:int,coordinators:list,database:Database,objectCoordMap:dict):
+    def setup(numWorkers:int,coordinators:list,database:Database,objectCoordMap:dict,tcId:int):
         #output("Inside setup of coordinator process")
         workers = new(worker.Worker,num = numWorkers)
-        setup(workers,(coordinators,database,"../config/policy.xml",objectCoordMap))
+        setup(workers,(coordinators,database,"../config/policy.xml",objectCoordMap,tcId))
         start(workers)
         #output("Workers per coordinator have been setup")
         self.versionMap = dict()

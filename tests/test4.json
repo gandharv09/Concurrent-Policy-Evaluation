@@ -4,6 +4,7 @@
 		"numWorkerPerCoordinator": "3",
 		"minDBLatency": "3",
 		"maxDBLatency": "5",
+		"tcId":"4",
         "comment":"tc4 according to project.txt, WR sleep in updateReadAttr(3) n worker(1)"
 	},
 
