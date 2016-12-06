@@ -139,9 +139,16 @@ class Worker(process):
                             request.updateAttributes['viewCount'] = int(currentViewCount) +1
                             request.updatedObj = 1
                             request.decision = True
+                            destCoordId = request.workerCoordinatorId
+                            output("++++++++++++++++++++")
+                            if request.objects[request.updatedObj]!=request.mightWriteObj[0]:
+                                output("WARNING: INCORRECT PREDICTION")
+                                destCoordId = request.firstCoordinatorId
+                                request.mightWriteObj[0] = request.objects[request.updatedObj]
+                            output("+++++++++++++++++++++++++")
                             output("Worker evaluated decision to be True.")
                             output("Worker sending updated write request to coordinator ",request.workerCoordinatorId)
-                            send(('updateObj', self.id,request, 1),to = request.workerCoordinatorId)
+                            send(('updateObj', self.id,request, 1),to = destCoordId)
                             output("Worker sent updated write request to coodinator")
                             return
                         else:

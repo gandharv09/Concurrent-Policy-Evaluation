@@ -143,6 +143,7 @@ class Coordinator(process):
         output("done with cache update")
 
         if order == 0:
+            request.firstCoordinatorId = self.id
             output("Sending to coordinator responsible for object with order 1")
             coordinatorIndex = lib.coord(lib.obj(request, 1),self.objectCoordMap)
             if coordinators[coordinatorIndex] == self.id:

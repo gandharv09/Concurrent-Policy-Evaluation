@@ -4,8 +4,8 @@
 		"numWorkerPerCoordinator": "3",
 		"minDBLatency": "3",
 		"maxDBLatency": "5",
-		"tcId":"7",
-		"comment":"tc7 according to project, sleep required in PREMIUM worker, Read followed by write followed by read"
+		"tcId":"5",
+		"comment":"tc2 according to project,  sleep required in PREMIUM worker, Read followed by write"
 	},
 
 
@@ -23,14 +23,7 @@
 		"mightReadAttr": "subscriptionType",
 		"defReadAttr": "viewCount",
         "mightWriteAttr":"viewCount",
-        "mightWriteObj":"movieA"
+        "mightWriteObj":"customerA"
 		
-	},{
-		"subject": "customerB",
-		"resource": "movieA",
-		"action": "view",
-		"mightReadAttr": "viewCount",
-		"defReadAttr": "subscriptionType"
-        
 	}]
 }
