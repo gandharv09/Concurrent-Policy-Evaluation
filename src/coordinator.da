@@ -206,7 +206,7 @@ class Coordinator(process):
         wReq = None
         for k,v in self.writeQueue.items():
             if request.reqId in v :
-                output("Found read onnly request in write queue.Removing entry.")
+                output("Found current read request as a dependency in Write waiting Queue, therefore removing its entry.")
                 v.remove(request.reqId)
                 if len(v) == 0:
                     wReq = k
